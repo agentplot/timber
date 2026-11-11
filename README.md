@@ -78,11 +78,20 @@ neither of them knows timber exists.
 | `docs/adr/` | the decisions behind the rules, one record each |
 | `devenv.nix` | the shell: moon through proto, bun, and Playwright with its Chromium |
 | `.config/kit.toml` | the kit standard's profile this repository follows |
+| `set-version.sh` | writes a release's version into every file that carries timber's |
+| `release-commit.sh` | makes a release's commit, one id wherever it runs |
 
 ```sh
 devenv shell -- moon run site:build   # the site, with every internal link checked
 devenv shell -- site-dev              # http://localhost:4321/timber/
 ```
+
+CI releases each push to main that git-cliff finds a new version in.
+main's tree names `0.0.0`. A release's tag names a release commit, cut
+from the pushed commit, that writes the version into every file that
+carries timber's (`release-commit.sh`, `set-version.sh`), so a build of
+the tag says that version with nothing given (record 0031).
+`devenv shell -- release-preview` shows the next release.
 
 ## License
 
