@@ -14,7 +14,7 @@ members = [
 # that carries timber's (set-version.sh, release-commit.sh), so a build
 # takes its version from the tree alone and the binary says it (record
 # 0031).
-version = "0.0.0"
+version = "0.6.0"
 edition = "2021"
 license = "MIT"
 

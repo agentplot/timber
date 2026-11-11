@@ -1,6 +1,6 @@
 {
   "name": "timber",
-  "version": "0.0.0",
+  "version": "0.6.0",
   "description": "Keep a session publishing a timber repository only through timber publish: an ecosystem's own publish command is refused, naming timber publish instead.",
   "author": { "name": "agentplot" },
   "homepage": "https://agentplot.github.io/timber/guides/claude-code/",
