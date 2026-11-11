@@ -62,3 +62,12 @@ tasks:
     inputs: ['/Cargo.toml', '/Cargo.lock', '/plugins/claude-code/.claude-plugin/plugin.json', '/plugins/herdr/herdr-plugin.toml', '/set-version.sh', '/check-versions.sh', '/devenv.nix', '/devenv.lock']
     tags: [check-fast]
     options: {runFromWorkspaceRoot: true}
+  # A release's tag names the release commit release-commit.sh makes, one
+  # id wherever it runs, proved in scratch repositories; and a build takes
+  # timber's version from its tree alone (check-release.sh; record 0031;
+  # core.74). git and jq are devenv's, and it needs no credential.
+  release:
+    command: 'sh check-release.sh'
+    inputs: ['/set-version.sh', '/release-commit.sh', '/check-release.sh', '/Cargo.toml', '/Cargo.lock', '/plugins/claude-code/.claude-plugin/plugin.json', '/plugins/herdr/herdr-plugin.toml', '/.github/workflows/ci.yml', '/flake.nix', '/devenv.nix', '/devenv.lock']
+    tags: [check-fast]
+    options: {runFromWorkspaceRoot: true}
