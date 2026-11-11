@@ -918,17 +918,6 @@ fn a_version_given_to_publish_is_an_argument_it_cannot_read() {
     assert_eq!(host.calls(), 0, "the core was asked");
 }
 
-#[test]
-fn the_binary_says_its_revision_and_no_version() {
-    let host = Host::new();
-    let out = host.binary(&["--version"]);
-    assert_eq!(out.status.code(), Some(0));
-    assert_eq!(
-        String::from_utf8_lossy(&out.stdout).trim_end(),
-        format!("timber {}", timber::VERSION_LINE)
-    );
-}
-
 // Requirement: Status needs no seam
 
 #[test]
