@@ -918,17 +918,6 @@ fn a_version_given_to_publish_is_an_argument_it_cannot_read() {
     assert_eq!(host.calls(), 0, "the core was asked");
 }
 
-#[test]
-fn the_binary_says_its_revision_and_no_version() {
-    let host = Host::new();
-    let out = host.binary(&["--version"]);
-    assert_eq!(out.status.code(), Some(0));
-    assert_eq!(
-        String::from_utf8_lossy(&out.stdout).trim_end(),
-        format!("timber {}", timber::VERSION_LINE)
-    );
-}
-
 // Requirement: Status needs no seam
 
 #[test]
@@ -3242,5 +3231,25 @@ fn a_sync_in_a_checkout_whose_remote_names_no_owner_is_unreadable_naming_it() {
     assert!(
         !serving.state.join(serving::REPOSITORIES).exists(),
         "the host's file was written"
+    );
+}
+
+// Requirement: The binary says its version, its revision and its build
+
+#[test]
+fn the_binary_says_its_version_its_revision_and_its_build() {
+    let out = Command::new(env!("CARGO_BIN_EXE_timber"))
+        .arg("--version")
+        .output()
+        .unwrap();
+    assert_eq!(out.status.code(), Some(0), "{out:?}");
+    assert_eq!(
+        String::from_utf8_lossy(&out.stdout),
+        format!(
+            "timber {}, revision {}, built by {}\n",
+            env!("CARGO_PKG_VERSION"),
+            timber::REVISION,
+            timber::BUILD
+        )
     );
 }

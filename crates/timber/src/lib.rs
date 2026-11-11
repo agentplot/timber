@@ -44,18 +44,21 @@ pub mod render;
 #[path = "../tests/ports/mod.rs"]
 mod ports;
 
-/// The revision this binary was built from. A binary carries the revision
-/// and the build that made it, never a version (24, C.11): the release's
-/// version is its tag's, and `timber status` says which version a
-/// revision became.
+/// The revision this binary was built from, which it names beside its
+/// version, the tree's, and the build that made it (record 0031): a host
+/// holding two builds of one version tells them apart by it.
 pub const REVISION: &str = env!("TIMBER_REVISION");
 
 /// The build that made these bytes: the compiler and the target.
 pub const BUILD: &str = env!("TIMBER_BUILD");
 
-/// What `timber --version` prints after the name.
+/// What `timber --version` prints after the name: the version cargo gives
+/// from the tree, `0.0.0` on main and the release's at a release's tag,
+/// the revision the binary was built from and the build that made it
+/// (record 0031).
 pub const VERSION_LINE: &str = concat!(
-    "revision ",
+    env!("CARGO_PKG_VERSION"),
+    ", revision ",
     env!("TIMBER_REVISION"),
     ", built by ",
     env!("TIMBER_BUILD")
@@ -152,16 +155,4 @@ pub(crate) fn unsigned() -> Not {
         &Source::new(Seam::Host, "bindings"),
         "binding of the signer, [signing] in the bindings file",
     )
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn the_binary_names_a_revision_and_no_version() {
-        assert!(!REVISION.is_empty());
-        assert!(VERSION_LINE.starts_with("revision "));
-        assert!(!VERSION_LINE.contains("0.0.0"));
-    }
 }
