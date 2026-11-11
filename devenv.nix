@@ -491,11 +491,20 @@ in
   '';
 
   # The tool versions .prototools lists, installed before enterShell
-  # activates them and before treefmt formats with their rustfmt. A task,
-  # not part of enterShell, so a script that only sources the shell's
-  # environment never installs.
+  # activates them and before treefmt formats with their rustfmt. Rust is
+  # rustup's first, with the profile and components rust-toolchain.toml
+  # names, as flume's and boomdrive's are. proto makes the toolchain's
+  # directory before its Rust plugin asks `rustup toolchain list`, and
+  # rustup, run in the tree, takes that empty directory for the file's
+  # toolchain and adds only the file's components to it: a rustfmt with no
+  # librustc_driver beside it, and no rustc or cargo. The plugin then finds
+  # the toolchain listed and installs nothing. A task, not part of
+  # enterShell, so a script that only sources the shell's environment never
+  # installs.
   tasks."timber:proto:install" = {
     exec = ''
+      cd "$(${lib.getExe pkgs.git} rev-parse --show-toplevel)"
+      ${pkgs.rustup}/bin/rustup toolchain install
       ${protoHome}
       ${proto}/bin/proto install --config-mode upwards
     '';
