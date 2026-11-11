@@ -12,6 +12,7 @@ once its last stage delivers.
 ## 2. The binary says its version
 
 - [x] 2.1 `timber --version` prints `timber <version>, revision <revision>, built by <build>`, with the version cargo's from the tree. The unit test that held a revision and no version goes. `build.rs`'s and `lib.rs`'s comments say the binary names its version beside its revision and its build (command-line spec; design, Decision 5; Task notes 2.1). Verify with `devenv shell -- cargo test -p timber --test cli the_binary_says_its_version_its_revision_and_its_build`.
+- [x] 2.2 `crates/timber/tests/cli.rs` holds no test named for a binary that says no version: `the_binary_says_its_revision_and_no_version` goes, `the_binary_says_its_version_its_revision_and_its_build` holding the line (command-line spec; record 0031; verify.md, The finding). Verify with `devenv shell -- moon run ':#check-fast'`.
 
 ## 3. A release's tag names its release commit
 
