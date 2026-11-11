@@ -61,6 +61,18 @@ impl Repo {
         git(&self.path, args)
     }
 
+    /// No git command in this repository leaves a process behind. A
+    /// commit, a fetch, and the receive-pack a push runs here each start
+    /// `git maintenance run --auto --detach`, which holds
+    /// `objects/maintenance.lock` after the command has returned and
+    /// removes it later, so a snapshot's walk could list the lock and
+    /// find it gone. The setting is in the repository's own config, so a
+    /// push's receive-pack, which runs with none of the pusher's `-c`,
+    /// and a fixture made from a snapshot keep it.
+    fn quiet(&self) {
+        self.git(&["config", "maintenance.auto", "false"]);
+    }
+
     /// A commit with `message` writing each of `files`, and its revision.
     pub fn commit(&self, files: &[(&str, &str)], message: &str) -> Revision {
         for (file, contents) in files {
@@ -142,6 +154,7 @@ impl Fixture {
         let shared = Repo {
             path: root.path().join("shared.git"),
         };
+        shared.quiet();
         let fixture = Fixture {
             repo: Repo {
                 path: root.path().join("repo"),
@@ -158,6 +171,7 @@ impl Fixture {
         let repo = Repo {
             path: self.root.path().join(name),
         };
+        repo.quiet();
         // A clone of an empty history sets no upstream; one of a history
         // holding `main` would.
         repo.git(&["config", &format!("branch.{MAIN}.remote"), "origin"]);
