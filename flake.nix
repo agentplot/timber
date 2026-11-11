@@ -2,10 +2,12 @@
 # and for the GHA build. The development shell is devenv's (devenv.nix);
 # this flake only builds and installs. Rust is the version .prototools
 # names, so the release is built by the compiler the checks ran with. The
-# package's version is the release tag's: CI builds with
-# `TIMBER_VERSION=<version> nix build --impure`; any other build is
-# 0.0.0, Cargo.toml's. The binary itself names the revision it was built
-# from, never a version (statement 24, C.11).
+# package's version is the tree's, Cargo.toml's [workspace.package], and
+# nothing else: 0.0.0 on main, and the release's at a release's tag,
+# which names the release commit that wrote it (set-version.sh,
+# release-commit.sh; record 0031). The binary says that version beside
+# the revision it was built from, which this gives it, and the build that
+# made it.
 {
   description = "timber: build once, sign everything, promote with proof, in your own account";
 
@@ -43,8 +45,6 @@
         );
       rustVersion = (builtins.fromTOML (builtins.readFile ./.prototools)).rust;
       workspace = (builtins.fromTOML (builtins.readFile ./Cargo.toml)).workspace.package;
-      released = builtins.getEnv "TIMBER_VERSION";
-      version = if released != "" then released else workspace.version;
       revision = self.rev or self.dirtyRev or "unknown";
     in
     {
@@ -60,7 +60,7 @@
         {
           default = platform.buildRustPackage {
             pname = "timber";
-            inherit version;
+            inherit (workspace) version;
             env.TIMBER_REVISION = revision;
             src = self;
             cargoLock.lockFile = ./Cargo.lock;

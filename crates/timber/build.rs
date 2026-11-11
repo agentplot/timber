@@ -1,9 +1,9 @@
-//! What the binary says of itself: the revision it was built from and the
-//! build that made it, never a version (statement 24, C.11). The flake
-//! gives the revision as TIMBER_REVISION, since a nix build has no
-//! `.git`; a cargo build in a checkout reads git's HEAD, and runs again
-//! whenever HEAD or the branch it names moves, so no two builds of one
-//! commit stamp two revisions.
+//! What the binary says of itself beside the version cargo gives from the
+//! tree: the revision it was built from and the build that made it
+//! (record 0031). The flake gives the revision as TIMBER_REVISION, since a
+//! nix build has no `.git`; a cargo build in a checkout reads git's HEAD,
+//! and runs again whenever HEAD or the branch it names moves, so no two
+//! builds of one commit stamp two revisions.
 
 use std::path::Path;
 use std::process::Command;

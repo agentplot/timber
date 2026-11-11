@@ -1,7 +1,11 @@
 # git-cliff: the next version and the release notes, from the
-# conventional commits since the last v* tag. CI releases with it on each
+# conventional commits since the newest v* tag. CI releases with it on each
 # push to main; `devenv shell -- release-preview` shows what would be
-# released. The version lives only in the tag (statement 24, C.11).
+# released. The version lives in the tree of the tag's release commit,
+# which writes it into every file that carries timber's (set-version.sh,
+# release-commit.sh; record 0031); main's tree names 0.0.0. The tag names
+# that commit, off main's history, so CI reckons with `--unreleased`,
+# whose range starts at the newest tag.
 
 [changelog]
 header = ""
