@@ -3244,3 +3244,23 @@ fn a_sync_in_a_checkout_whose_remote_names_no_owner_is_unreadable_naming_it() {
         "the host's file was written"
     );
 }
+
+// Requirement: The binary says its version, its revision and its build
+
+#[test]
+fn the_binary_says_its_version_its_revision_and_its_build() {
+    let out = Command::new(env!("CARGO_BIN_EXE_timber"))
+        .arg("--version")
+        .output()
+        .unwrap();
+    assert_eq!(out.status.code(), Some(0), "{out:?}");
+    assert_eq!(
+        String::from_utf8_lossy(&out.stdout),
+        format!(
+            "timber {}, revision {}, built by {}\n",
+            env!("CARGO_PKG_VERSION"),
+            timber::REVISION,
+            timber::BUILD
+        )
+    );
+}
