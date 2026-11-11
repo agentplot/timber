@@ -6,7 +6,8 @@
 # host's settings that would sign, hook and name another author, make one
 # id, the bot's, dated at its parent's commit time, changing exactly the
 # files set-version.sh lists. It refuses a tree that differs from its
-# commit and a version that is not major.minor.patch, moving nothing. It
+# commit and a version that is not major.minor.patch, moving nothing. The
+# flake versions its package by Cargo.toml's [workspace.package] alone. It
 # needs git and jq, the shell's, and no credential (core.26, core.38).
 set -u
 root=$(cd "$(dirname "$0")" && pwd)
@@ -143,5 +144,16 @@ fi
 [ -z "$(git -C "$scratch/d" status --porcelain)" ] ||
   fail "release-commit.sh 0.56 left the tree changed: $(git -C "$scratch/d" status --porcelain)"
 
-[ "$status" -ne 0 ] || echo "release: release-commit.sh makes one release commit wherever it runs"
+# The flake versions its package by Cargo.toml's [workspace.package] alone:
+# no variable, no impure read.
+if grep -n 'TIMBER_VERSION\|getEnv' flake.nix >"$scratch/said"; then
+  fail "flake.nix reads a version from outside the tree:"
+  cat "$scratch/said" >&2
+fi
+grep -q 'workspace = (builtins.fromTOML (builtins.readFile ./Cargo.toml)).workspace.package;' flake.nix ||
+  fail "flake.nix reads no workspace from Cargo.toml's [workspace.package]"
+grep -q '^ *inherit (workspace) version;$' flake.nix ||
+  fail "flake.nix versions its package by something other than the workspace's version"
+
+[ "$status" -ne 0 ] || echo "release: release-commit.sh makes one release commit wherever it runs, and a build takes timber's version from its tree alone"
 exit $status
