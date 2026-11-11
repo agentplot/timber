@@ -9,9 +9,11 @@ members = [
 ]
 
 [workspace.package]
-# The released version is the tag's, given to the flake as TIMBER_VERSION
-# and never to the binary: a binary names the revision it was built from
-# and the build that made it (statement 24, C.11).
+# main gives 0.0.0, the version no release has. A release's tag names the
+# release commit that writes the release's version here and in every file
+# that carries timber's (set-version.sh, release-commit.sh), so a build
+# takes its version from the tree alone and the binary says it (record
+# 0031).
 version = "0.0.0"
 edition = "2021"
 license = "MIT"

@@ -1,6 +1,6 @@
 id = "agentplot.timber"
 name = "timber"
-version = "0.1.0"
+version = "0.0.0"
 min_herdr_version = "0.9.3"
 description = "timber beside your agents: every repository this host knows, each channel's version and the environments, and one repository whole, read from the host's one serving process."
 platforms = ["linux", "macos"]
