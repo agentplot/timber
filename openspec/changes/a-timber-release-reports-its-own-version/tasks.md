@@ -7,7 +7,7 @@ once its last stage delivers.
 
 ## 1. timber's tree names its version, and set-version.sh writes it
 
-- [ ] 1.1 Main's tree gives `0.0.0` in every file that carries timber's version: the two plugin manifests move from `0.1.0`, and `Cargo.toml`'s comment says how a release writes its version. `set-version.sh <x.y.z> [<root>]` writes the version into each file, changing no other line. It refuses a version that is not `x.y.z` and a file with no version, naming it, and `--files` lists the four files. `check-versions.sh` holds them as the root's `versions` task (release-version spec, Main's tree names no release and set-version.sh; design, Decisions 1 and 2; Task notes 1.1). Verify with `devenv shell -- moon run root:versions`.
+- [x] 1.1 Main's tree gives `0.0.0` in every file that carries timber's version: the two plugin manifests move from `0.1.0`, and `Cargo.toml`'s comment says how a release writes its version. `set-version.sh <x.y.z> [<root>]` writes the version into each file, changing no other line. It refuses a version that is not `x.y.z` and a file with no version, naming it, and `--files` lists the four files. `check-versions.sh` holds them as the root's `versions` task (release-version spec, Main's tree names no release and set-version.sh; design, Decisions 1 and 2; Task notes 1.1). Verify with `devenv shell -- moon run root:versions`.
 
 ## 2. The binary says its version
 
