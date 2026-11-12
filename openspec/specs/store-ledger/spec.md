@@ -65,7 +65,7 @@ beside the record of published versions (61, 62). Where the store
 cannot be reached, chain SHALL answer the chain as kept, saying when it
 was read and carrying the store's words, an empty chain kept as an
 empty chain with that time and those words (60, as amended at
-agentplot/blueprints b64d367, C.14); with nothing kept, the chain SHALL
+boomdrivedev/blueprints b64d367, C.14); with nothing kept, the chain SHALL
 be unreadable with the store's words. Append SHALL be unreadable with
 the store's words. What is kept SHALL hold no credential and nothing
 the store holds that is not the chain (64).

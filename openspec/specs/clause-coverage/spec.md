@@ -18,7 +18,7 @@ adopts it.
 #### Scenario: The clauses listed
 
 - **WHEN** the suite's list of clauses is read
-- **THEN** it holds every number from 1 to 143 exactly once, each under its section of Part A or Part B as agentplot/blueprints 90cf023 places it, 141, 142 and 143 after 13 in A.2, and names that revision as the one it was read at
+- **THEN** it holds every number from 1 to 143 exactly once, each under its section of Part A or Part B as boomdrivedev/blueprints 90cf023 places it, 141, 142 and 143 after 13 in A.2, and names that revision as the one it was read at
 
 ### Requirement: A clause cited by nothing fails the suite
 
@@ -134,5 +134,5 @@ core.33, section 12).
 
 #### Scenario: The register after the statement is adopted
 
-- **WHEN** the coverage check runs after the commit that adopts agentplot/blueprints 90cf023
+- **WHEN** the coverage check runs after the commit that adopts boomdrivedev/blueprints 90cf023
 - **THEN** 141 is pending with its unit, 142 and 143 are pending with phase 2, each with its reason, and the check passes

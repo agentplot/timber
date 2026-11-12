@@ -76,7 +76,7 @@ when it was last written and carrying git's words of why the remote did
 not answer (60, C.13); where the copy last read the channel holding no
 claim, chain SHALL answer it empty, saying when it was read and
 carrying git's words, as any other chain as last fetched (60, as
-amended at agentplot/blueprints b64d367); with no copy of the channel
+amended at boomdrivedev/blueprints b64d367); with no copy of the channel
 at all, the chain SHALL be unreadable with git's words. Append SHALL be
 unreadable with git's words, and SHALL never append to the copy alone
 where a remote is bound.

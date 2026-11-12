@@ -197,7 +197,7 @@ and every promotion in order with what its claim records; a head that
 holds no promotion claim of timber's form SHALL be unreadable naming
 it. Where the ledger answered the chain as last read, the answer SHALL
 say when and carry the source's words, an empty channel as any other
-(60 as amended at agentplot/blueprints b64d367). Reading a channel
+(60 as amended at boomdrivedev/blueprints b64d367). Reading a channel
 SHALL ask the store nothing and write nothing (101, 60, core.32).
 
 #### Scenario: A promotion read on another machine

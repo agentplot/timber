@@ -346,7 +346,7 @@ components are. Its keys SHALL be C.10's words and no others: its
 `after`, a list of environment names of the same component, `target`,
 and, where the environment is manual, `approvers`, the signers that may
 say yes, read as a channel's `approvers` is (C.10, as ruled at
-agentplot/blueprints 088430c). `target` SHALL be a table of exactly one
+boomdrivedev/blueprints 088430c). `target` SHALL be a table of exactly one
 key, the profile of the environment's target, whose value is a table,
 the target's own settings, which the profile SHALL carry as written and
 read nothing of (C.10, 136). Any other `policy`, or a `channel` the file
@@ -403,7 +403,7 @@ another made channel, or a line under it naming another binding or
 `on_each_publish`, SHALL be unreadable naming the table; so SHALL a
 line under it naming `approvers`, saying that who may ask for it is
 written on the environment, since the made channel takes its
-environment's (C.10, as ruled at agentplot/blueprints 088430c).
+environment's (C.10, as ruled at boomdrivedev/blueprints 088430c).
 
 #### Scenario: A manual environment named beta
 

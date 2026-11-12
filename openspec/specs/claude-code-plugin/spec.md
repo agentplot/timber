@@ -76,7 +76,7 @@ the command to run and nothing it derived.
 
 The repository's root SHALL hold a Claude Code marketplace named
 `timber` listing one plugin, `timber`, whose source is
-`plugins/claude-code`, so `/plugin marketplace add agentplot/timber`
+`plugins/claude-code`, so `/plugin marketplace add boomdrivedev/timber`
 then `/plugin install timber@timber` installs it; the marketplace and
 the plugin's manifest SHALL pass the pinned Claude Code's `plugin
 validate --strict` in the gate's fast layer (core.25, core.26).
