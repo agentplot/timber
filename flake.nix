@@ -1,4 +1,4 @@
-# timber as a nix package, for `nix profile install github:agentplot/timber`
+# timber as a nix package, for `nix profile install github:boomdrivedev/timber`
 # and for the GHA build. The development shell is devenv's (devenv.nix);
 # this flake only builds and installs. Rust is the version .prototools
 # names, so the release is built by the compiler the checks ran with. The
@@ -72,7 +72,7 @@
             doCheck = false;
             meta = {
               description = "Build once, sign everything, promote with proof, in your own account";
-              homepage = "https://github.com/agentplot/timber";
+              homepage = "https://github.com/boomdrivedev/timber";
               license = pkgs.lib.licenses.mit;
               mainProgram = "timber";
             };

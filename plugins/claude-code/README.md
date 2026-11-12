@@ -6,7 +6,7 @@ it runs, and the refusal names `timber publish` for a landed revision
 instead.
 
 ```
-/plugin marketplace add agentplot/timber
+/plugin marketplace add boomdrivedev/timber
 /plugin install timber@timber
 ```
 
@@ -39,7 +39,7 @@ never runs `timber`, so it refuses the same on a host that has none. Its
 refusal names the command to run and no version, component or channel,
 each of which is the core's to derive.
 
-Guide: <https://agentplot.github.io/timber/guides/claude-code/>.
+Guide: <https://boomdrivedev.github.io/timber/guides/claude-code/>.
 
 This directory sits outside timber's core: no crate imports it, so it
 may name the commands it refuses (section 9, rule core.1).

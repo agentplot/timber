@@ -1,6 +1,6 @@
 $schema: 'https://moonrepo.dev/schemas/project.json'
 
-# The site, published to https://agentplot.github.io/timber by
+# The site, published to https://boomdrivedev.github.io/timber by
 # .github/workflows/pages.yml. bun comes from the devenv shell, bun's own
 # release build (devenv.nix).
 language: 'typescript'

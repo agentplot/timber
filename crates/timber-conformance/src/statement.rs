@@ -3,7 +3,7 @@
 //! changes only in the commit that adopts a change of the statement.
 
 /// The statement's revision the clauses were read at.
-pub const READ_AT: &str = "agentplot/blueprints 90cf023";
+pub const READ_AT: &str = "boomdrivedev/blueprints 90cf023";
 
 /// Each section of Parts A and B, and its clauses.
 pub const PARTS: &[(&str, &[u16])] = &[
@@ -57,7 +57,7 @@ mod tests {
         assert_eq!(clauses.len(), 143);
         clauses.sort_unstable();
         assert_eq!(clauses, (1..=143).collect::<Vec<u16>>());
-        assert_eq!(READ_AT, "agentplot/blueprints 90cf023");
+        assert_eq!(READ_AT, "boomdrivedev/blueprints 90cf023");
         let sections: Vec<&str> = PARTS
             .iter()
             .map(|(s, _)| s.split(' ').next().unwrap())
@@ -67,7 +67,7 @@ mod tests {
             .chain((1..=9).map(|n| format!("B.{n}")))
             .collect();
         assert_eq!(sections, named);
-        assert!(READ_AT.starts_with("agentplot/blueprints "));
+        assert!(READ_AT.starts_with("boomdrivedev/blueprints "));
     }
 
     fn section(of: u16) -> &'static str {

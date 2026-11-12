@@ -2,8 +2,8 @@
 
 **Designed; the scaffold is built and nothing of the design yet.** The
 design is settled in
-[agentplot/blueprints](https://github.com/agentplot/blueprints); the
-[roadmap](https://agentplot.github.io/timber/roadmap/) says what each
+[boomdrivedev/blueprints](https://github.com/boomdrivedev/blueprints); the
+[roadmap](https://boomdrivedev.github.io/timber/roadmap/) says what each
 bolt delivers.
 
 **Build once, sign everything, promote with proof, in your own account.**
@@ -19,10 +19,10 @@ a build cache, an artifact repository and a release system, and the bytes
 that passed the gate are the bytes that run. Your artifacts, in your
 account.
 
-- **The site:** https://agentplot.github.io/timber
-- **The design book:** https://agentplot.github.io/blueprints/timber/
+- **The site:** https://boomdrivedev.github.io/timber
+- **The design book:** https://boomdrivedev.github.io/blueprints/timber/
 - **The statement**, timber's invariants as numbered clauses, is
-  `design/timber/requirements.md` in agentplot/blueprints, being
+  `design/timber/requirements.md` in boomdrivedev/blueprints, being
   written now.
 
 ## What it does

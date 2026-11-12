@@ -5,7 +5,7 @@ repository this host knows, each channel's version and the environments,
 and one repository whole.
 
 ```sh
-herdr plugin install agentplot/timber/plugins/herdr
+herdr plugin install boomdrivedev/timber/plugins/herdr
 ```
 
 Needs herdr 0.9.3 or later, on Linux or macOS, with a `timber` that has

@@ -6,8 +6,8 @@ description: What a self-hosted timber is, what one laptop needs and what a team
 timber is designed, not built, and this page says what running it
 yourself will be. There is no hosted timber: self-hosted is the only
 kind. Everything here follows
-[the statement](https://github.com/agentplot/blueprints/blob/main/design/timber/requirements.md),
-whose [Part C](https://github.com/agentplot/blueprints/blob/main/design/timber/requirements.md#part-c-profiles)
+[the statement](https://github.com/boomdrivedev/blueprints/blob/main/design/timber/requirements.md),
+whose [Part C](https://github.com/boomdrivedev/blueprints/blob/main/design/timber/requirements.md#part-c-profiles)
 names the profiles a host binds.
 
 ## What a self-hosted timber is
@@ -741,7 +741,7 @@ not a role assumed by OIDC.
     AWS_REGION: us-east-1
     GH_TOKEN: ${{ github.token }}
   run: |
-    gh release download --repo agentplot/timber \
+    gh release download --repo boomdrivedev/timber \
       --pattern timber-x86_64-linux.tar.gz --output - | tar -xz -C "$RUNNER_TEMP"
     sudo apt-get install -y amazon-ecr-credential-helper
     mkdir -p ~/.docker ~/.config/timber
@@ -833,7 +833,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           SIGNING_KEY: ${{ secrets.TIMBER_SIGNING_KEY }}
         run: |
-          gh release download --repo agentplot/timber \
+          gh release download --repo boomdrivedev/timber \
             --pattern timber-x86_64-linux.tar.gz --output - | tar -xz -C "$RUNNER_TEMP"
           sudo apt-get install -y amazon-ecr-credential-helper
           mkdir -p ~/.docker ~/.config/timber

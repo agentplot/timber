@@ -1,6 +1,6 @@
 # The site
 
-timber's site at https://agentplot.github.io/timber, an
+timber's site at https://boomdrivedev.github.io/timber, an
 [Astro](https://astro.build) site with [Starlight](https://starlight.astro.build),
 published by `.github/workflows/pages.yml` on every push to `main` that
 touches `site/` or the README.

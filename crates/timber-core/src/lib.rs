@@ -1,5 +1,5 @@
 //! The core: what timber does with its seams, Part A of the statement in
-//! agentplot/blueprints `design/timber/requirements.md`. Code here names
+//! boomdrivedev/blueprints `design/timber/requirements.md`. Code here names
 //! no registry, task runner, merge queue, key service, package manager,
 //! deploy target or forge (rule core.1); it reaches each through the one
 //! trait of `timber_seams`, and the repository's history through git,
