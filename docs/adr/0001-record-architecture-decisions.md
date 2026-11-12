@@ -10,7 +10,7 @@ decision-makers:
 # Record architecture decisions
 
 Deciders: the user, in the timber exploration of 2026-10-21 and 2026-10-22.
-Sources: `agentplot/blueprints:design/timber/requirements.md`; `agentplot/blueprints:design/requirements-style.md`; sluice's `docs/adr/0001` as the model for the form; the inception pack of 2026-10-22, which tags each claim decided, leaning, proposed or open.
+Sources: `boomdrivedev/blueprints:design/timber/requirements.md`; `boomdrivedev/blueprints:design/requirements-style.md`; sluice's `docs/adr/0001` as the model for the form; the inception pack of 2026-10-22, which tags each claim decided, leaning, proposed or open.
 
 ## Context and problem statement
 

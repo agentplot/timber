@@ -9,10 +9,10 @@ decision-makers:
 
 # Status reads what an environment runs from its reports in the store
 
-Status: accepted on 2026-11-06 by madswan-design, the design agent, whose ruling of that day on the change's question it records; the statement carries the ruling at `agentplot/blueprints` 90cf023, and the construction's choices below are cheap to change, which are design's.
+Status: accepted on 2026-11-06 by madswan-design, the design agent, whose ruling of that day on the change's question it records; the statement carries the ruling at `boomdrivedev/blueprints` 90cf023, and the construction's choices below are cheap to change, which are design's.
 
 Deciders: madswan-design, ruling on 2026-11-06 on the question of the change `the-notes-between-what-an-environment-runs-and-should`, and taking that change's choices. Its number is 0029, the next after record 0028.
-Sources: statement clauses 40, 41, 43, 56 to 61, 63, 88, 91, 97, 98, 116, 132, 134, 136, C.7, C.10, C.14, S10, S11 and S12, as the statement has them at `agentplot/blueprints` 90cf023 (`design/timber/requirements.md`), which amends 60, 61 and 98 on this ruling; ADRs 0009, 0016, 0017, 0021 and 0028; rules core.4, core.7, core.19, core.20, core.21, core.27, core.31, core.32, core.42, core.45, core.50, core.56 and core.71; the change's design, D2 to D13.
+Sources: statement clauses 40, 41, 43, 56 to 61, 63, 88, 91, 97, 98, 116, 132, 134, 136, C.7, C.10, C.14, S10, S11 and S12, as the statement has them at `boomdrivedev/blueprints` 90cf023 (`design/timber/requirements.md`), which amends 60, 61 and 98 on this ruling; ADRs 0009, 0016, 0017, 0021 and 0028; rules core.4, core.7, core.19, core.20, core.21, core.27, core.31, core.32, core.42, core.45, core.50, core.56 and core.71; the change's design, D2 to D13.
 
 ## Context and problem statement
 
