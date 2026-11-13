@@ -100,4 +100,3 @@ Choices made in building it that the design did not fix at first, each cheap to 
 - The gate's and apply's newest report read no copy and refuse a chain as last read, as before (core.45).
 - Rule core.32 lets status reach a store only to fetch a chain it holds or an environment's reports into the host's copy, and the details of core.27 and core.71 say the copy is no keeping of a report apart from its index.
 - Record 0028's line leaving environments in status to phase 2 is withdrawn; environments in status are this record's.
-- Environments a target's roster holds (126) are phase 2's, since reading a roster reaches a target (60).

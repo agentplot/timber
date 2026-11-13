@@ -129,6 +129,6 @@ Choices made in building it that the design did not fix at first, each cheap to 
 - A channel an `after` makes follows what its environments last reported, forward and back, told by the apply's host; a file whose signers hold no `report` leaves every such channel where it is.
 - Environments in status and on the page (98) are read from the reports: status fetches each environment's reports into the host's copy as it fetches a chain the store holds, and answers the newest counted one, from the copy saying when where the store does not, reaching no signer and no target (60, 61, 98 as amended at `boomdrivedev/blueprints` 90cf023). Record 0029 decides it, amending core.32.
 - What runs `timber apply` when a channel moves stays the host's, a watcher, a timer, the driver or a person (C.16, core.52).
-- Until the open unit `a-promotion-says-its-asker-names-a-host` gives a promotion its cause (129), a move on reports names the gate's signer as who asked, and the reports among its counted claims.
+- A move on reports names the gate's signer as who asked, and the reports among its counted claims.
 - The proof against a machine runs by hand under `check-fleet`, against a throwaway machine the operator names in `TIMBER_TOOLS_FLEET`, since the machine's key is a key file no gate task reads (core.38).
-- The Nix fleet's pull profile and its roster (44, 126) are phase 2's, and keep the system profile as their marker.
+- The Nix fleet's pull profile and its roster (44, 126) keep the system profile as their marker.
