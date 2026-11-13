@@ -1,5 +1,5 @@
 //! The seams of timber: exactly eight, one trait each (rule core.2,
-//! statement Part B, in agentplot/blueprints
+//! statement Part B, in boomdrivedev/blueprints
 //! `design/timber/requirements.md`).
 //!
 //! | seam | trait | statement |

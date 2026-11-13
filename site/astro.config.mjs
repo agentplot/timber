@@ -1,12 +1,12 @@
 // The site, built by Astro with Starlight and published to GitHub Pages at
-// https://agentplot.github.io/timber by .github/workflows/pages.yml.
+// https://boomdrivedev.github.io/timber by .github/workflows/pages.yml.
 
 import starlight from "@astrojs/starlight";
 import { defineConfig } from "astro/config";
 import starlightLinksValidator from "starlight-links-validator";
 
 export default defineConfig({
-  site: "https://agentplot.github.io",
+  site: "https://boomdrivedev.github.io",
   base: "/timber",
   integrations: [
     starlight({
@@ -34,8 +34,8 @@ export default defineConfig({
         "./src/styles/diagrams.css",
         "./src/styles/screenshots.css",
       ],
-      social: [{ icon: "github", label: "GitHub", href: "https://github.com/agentplot/timber" }],
-      editLink: { baseUrl: "https://github.com/agentplot/timber/edit/main/site/" },
+      social: [{ icon: "github", label: "GitHub", href: "https://github.com/boomdrivedev/timber" }],
+      editLink: { baseUrl: "https://github.com/boomdrivedev/timber/edit/main/site/" },
       plugins: [starlightLinksValidator()],
       sidebar: [
         { label: "Start", link: "/" },

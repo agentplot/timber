@@ -68,7 +68,7 @@ answering like any channel's, and never answered as not declared. A
 repository that declares no channel, as 102 lets it, is one that writes
 no channel line: its versions are offered and accepted as 102 says, and
 it still has the givens, which the fragment declares (as ruled at
-agentplot/blueprints b64d367).
+boomdrivedev/blueprints b64d367).
 
 #### Scenario: A repository that writes no channel
 
@@ -129,7 +129,7 @@ for every component, marked held, with how it would move once switched
 on and the line that would switch it on, read from the fragment:
 `[channels.<name>]` where the repository declares no component and
 `[channels.<component>.<name>]` where it declares components (C.10 as
-amended at agentplot/blueprints b1267d7, 131 as amended at 1ae1cc5). A
+amended at boomdrivedev/blueprints b1267d7, 131 as amended at 1ae1cc5). A
 given the repository switches on SHALL leave the held givens and join
 the channels in force, and one it does not SHALL never be among the
 channels in force.
@@ -235,7 +235,7 @@ names and bound to that channel, moved only at an asking (41, 97,
 C.10). Who may ask for it SHALL be named by `approvers` on the
 environment, `[environments.<environment>]`, which the made channel
 takes as its own; never under the made channel, which the repository
-does not write approvers on (C.10, as ruled at agentplot/blueprints
+does not write approvers on (C.10, as ruled at boomdrivedev/blueprints
 088430c). An environment whose `policy` is `auto`, or unwritten, SHALL
 make no channel.
 

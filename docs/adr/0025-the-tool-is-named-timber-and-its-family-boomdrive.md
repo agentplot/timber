@@ -14,7 +14,7 @@ Status: accepted by the user on 2026-11-07, on their card. The names are the use
 The user's words (2026-11-04): "the ecosystem, the org, the branding, the cloud and the opensource runner tool are all boomdrive. There is also a "boom" open source tool that does the claim reconciliation."
 
 Deciders: the user, 2026-11-04, renaming Flywheel to Boomdrive across every repository at once, through the chore tailrace-is-renamed-timber, which carries this repository's part. The mapping below is the brief's. The choices under "Considered options" are the chore's own.
-Sources: the user's words above; the chore's brief; statement clauses 65, 105, C.10, C.13 and C.16, and section 9 (`agentplot/blueprints:design/timber/requirements.md`); ADRs 0005, 0012, 0016 and 0022; rules core.5, core.15, core.23 and core.47.
+Sources: the user's words above; the chore's brief; statement clauses 65, 105, C.10, C.13 and C.16, and section 9 (`boomdrivedev/blueprints:design/timber/requirements.md`); ADRs 0005, 0012, 0016 and 0022; rules core.5, core.15, core.23 and core.47.
 
 ## Context and problem statement
 
@@ -24,7 +24,7 @@ The family of tools was named Flywheel. The user has renamed the product, the br
 - **Boomdrive Cloud** is the control plane, agentplot/boomdrive-cloud, formerly flywheel-cloud.
 - **Boomdrive**, the runner, is agentplot/boomdrive, formerly flywheel-runner. Its command is `boomdrive`, and its crates are `boomdrive` and `boomdrive-hosted`.
 - agentplot/boomdrive-web was flywheel-web.
-- **timber** is this tool, in agentplot/timber: its crates, its command, its site at https://agentplot.github.io/timber and its records.
+- **timber** is this tool, in boomdrivedev/timber: its crates, its command, its site at https://boomdrivedev.github.io/timber and its records.
 - **A drive**, plural drives, `Drive` in code, is a customer's unit of work, which was "a Flywheel".
 - agentplot/flywheel, the original, is archived. A mention of it as history stays and names it as archived.
 - boom is unchanged, and so is anything of a third party's that happens to say flywheel.
@@ -46,7 +46,7 @@ For the names timber writes and reads, which are the policy file, the ledger's, 
 
 For a citation of the statement:
 
-1. Cite `design/timber/` in agentplot/blueprints and the design book at https://agentplot.github.io/blueprints/timber/, which is where blueprints' own pass of the rename puts them. A path cited at a commit keeps the path that commit holds.
+1. Cite `design/timber/` in boomdrivedev/blueprints and the design book at https://boomdrivedev.github.io/blueprints/timber/, which is where blueprints' own pass of the rename puts them. A path cited at a commit keeps the path that commit holds.
 2. Cite `design/tailrace/` until blueprints moves, then change every citation again.
 
 For the site theme, which the site pins at a revision where this tool's member id is `tailrace`:
@@ -63,7 +63,7 @@ For the words that explain the old name, a watermill's tailrace carrying water a
 
 The names timber writes and reads move to timber, option 1. Nothing is held under the old names anywhere this chore could look on 2026-11-04:
 
-- agentplot/timber's remote holds no ref under `refs/tailrace/`.
+- boomdrivedev/timber's remote holds no ref under `refs/tailrace/`.
 - The host that runs the gate has no tailrace configuration, state or data directory.
 - No repository of agentplot's or afterthought's on GitHub, and no checkout on that host, holds a `.config/tailrace.toml`.
 
@@ -82,6 +82,6 @@ The words that explain the old name are option 1. The user gave the name and no 
 - C.16's "a hosted tailrace, Flywheel" and section 9's "a Flywheel plugin" read as timber and Boomdrive here, as the site's surfaces page and roadmap say.
 - A host whose `devenv.local.nix` sets `TAILRACE_TOOLS_ECR`, `TAILRACE_TOOLS_KMS_KEY` or `TAILRACE_TOOLS_KMS_STRANGER` sets the `TIMBER_` names for the hand-run checks. A host that installed the Claude Code plugin `tailrace` from the `tailrace` marketplace installs `timber` from `timber`. A host with the herdr plugin `agentplot.tailrace` installs `agentplot.timber` in its place. A host that fetches the release's `tailrace-<system>.tar.gz` fetches `timber-<system>.tar.gz`, and runs `timber`.
 - The site's `Family` call names `tailrace` until site-theme's own rename lands and the site's pin moves.
-- The suite reads the statement at `agentplot/blueprints` 7f60e57, as before. Its section A.11 is listed as "What timber keeps".
+- The suite reads the statement at `boomdrivedev/blueprints` 7f60e57, as before. Its section A.11 is listed as "What timber keeps".
 - The rename lands as a refactor, and git-cliff releases it as a patch after 0.5.1, its first release under the name timber. A breaking change's mark would make that release 1.0.0. Whether to make it 1.0.0 is a choice about what the version promises, and that choice is the user's.
 - ADR 0012 cites flywheel-next at fcaac6be. That repository is not renamed, so the citation stays as written.

@@ -3,10 +3,10 @@
 Delivers what the merge queue lands: versions, packages, signs and pushes
 the build's output as OCI artifacts with attestations into a registry the
 user owns, keeps channels and environments, and serves consumers under a
-policy. The design is the statement of invariants in agentplot/blueprints,
+policy. The design is the statement of invariants in boomdrivedev/blueprints,
 `design/timber/requirements.md`; this repository cites its clauses by
 number and never restates them. The design book is at
-https://agentplot.github.io/blueprints/timber/.
+https://boomdrivedev.github.io/blueprints/timber/.
 
 The scaffold is built and nothing of the design yet (ADR 0011): five
 crates as sluice's under `crates/`, the gate, the flake and the release
@@ -18,7 +18,7 @@ workflow. The language is Rust. Every cargo and moon command runs inside
 **The family.** This tool works with the others of the Boomdrive family:
 sluice (the merge queue), Flume (places and their agents), Boomdrive (the
 runner), timber, weir and boom. Each tool's statement is in
-agentplot/blueprints, `design/<tool>/requirements.md`. Before designing or
+boomdrivedev/blueprints, `design/<tool>/requirements.md`. Before designing or
 fixing a behavior here, look at how the related tools do the same thing,
 in their code and their statements: readiness, configuration,
 credentials, retries, what a place is. Where two tools do one thing,
@@ -57,7 +57,7 @@ Run a repository tool through the shell per command,
 
 ## The site
 
-`site/` is the Starlight site at https://agentplot.github.io/timber,
+`site/` is the Starlight site at https://boomdrivedev.github.io/timber,
 published by `.github/workflows/pages.yml`. `site/README.md` says where
 its pages and diagram live.
 

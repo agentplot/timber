@@ -9,10 +9,10 @@ decision-makers:
 
 # Every claim timber signs takes the catalogued kind that carries it
 
-Status: accepted by the user on 2026-11-02, approving that the clauses of `agentplot/blueprints` 7beb5fa come into this repository's rules and records; the choice is their ruling of 2026-11-01, which that commit carries into the statement.
+Status: accepted by the user on 2026-11-02, approving that the clauses of `boomdrivedev/blueprints` 7beb5fa come into this repository's rules and records; the choice is their ruling of 2026-11-01, which that commit carries into the statement.
 
-Deciders: the user, 2026-11-01, ruling on a reading of the public catalogues of claim kinds, carried into the statement at `agentplot/blueprints` cfe9e04 and 7beb5fa.
-Sources: statement clauses 7, 9, 10, 11, 12, 13, 30, 116, 141, 142, 143, sections 3 (trusted root) and 9, as amended at `agentplot/blueprints` cfe9e04 and 7beb5fa; ADRs 0005, 0014; rules core.1, core.7, core.8, core.51; in-toto's predicate catalogue, in-toto/attestation v1.2.0, `spec/predicates`; SLSA 1.2's build requirements, which recommend SLSA Provenance; SLSA's Verification Summary Attestation, v1.1; Sigstore's bundle; `crates/timber-seams/src/claim.rs` as origin/main holds it on 2026-11-02.
+Deciders: the user, 2026-11-01, ruling on a reading of the public catalogues of claim kinds, carried into the statement at `boomdrivedev/blueprints` cfe9e04 and 7beb5fa.
+Sources: statement clauses 7, 9, 10, 11, 12, 13, 30, 116, 141, 142, 143, sections 3 (trusted root) and 9, as amended at `boomdrivedev/blueprints` cfe9e04 and 7beb5fa; ADRs 0005, 0014; rules core.1, core.7, core.8, core.51; in-toto's predicate catalogue, in-toto/attestation v1.2.0, `spec/predicates`; SLSA 1.2's build requirements, which recommend SLSA Provenance; SLSA's Verification Summary Attestation, v1.1; Sigstore's bundle; `crates/timber-seams/src/claim.rs` as origin/main holds it on 2026-11-02.
 
 ## Context and problem statement
 

@@ -7,8 +7,8 @@ date: 2026-11-11
 
 # A release's tag names a release commit that writes timber's version, and the binary says it
 
-Status: accepted on the brief of the change a-timber-release-reports-its-own-version, 2026-11-11, which decides it in its words: "A timber release's tag names a release commit, off main, that writes the release's version into the tree: the workspace's `Cargo.toml` and every file that names timber's version. A build from the tag therefore reports that version and names its packages by it, with no variable or argument from the builder. main's tree names `0.0.0`." The family's decision is agentplot/blueprints `design/principles.md` 14 and agentplot/boomdrive record 0023; how timber carries it out below is the change's own, cheap to change.
-Sources: agentplot/blueprints `design/principles.md` 14: "A tool that needs what another program knows reads that program's own source, never a file a host makes for it."; agentplot/boomdrive record 0023, the set taking each tool's own package; Flume's `set-version.sh`, `check-versions.sh` and release job at e2973d57, and its tag v0.21.2, which names `chore(release): v0.21.2`; crew's `code.10` and its change a-crew-release-reports-its-own-version, landed as #73 at 81a883f3; sluice's change a-sluice-release-reports-its-own-version and its record 0111; statement clauses 24 and C.11; record 0011.
+Status: accepted on the brief of the change a-timber-release-reports-its-own-version, 2026-11-11, which decides it in its words: "A timber release's tag names a release commit, off main, that writes the release's version into the tree: the workspace's `Cargo.toml` and every file that names timber's version. A build from the tag therefore reports that version and names its packages by it, with no variable or argument from the builder. main's tree names `0.0.0`." The family's decision is boomdrivedev/blueprints `design/principles.md` 14 and agentplot/boomdrive record 0023; how timber carries it out below is the change's own, cheap to change.
+Sources: boomdrivedev/blueprints `design/principles.md` 14: "A tool that needs what another program knows reads that program's own source, never a file a host makes for it."; agentplot/boomdrive record 0023, the set taking each tool's own package; Flume's `set-version.sh`, `check-versions.sh` and release job at e2973d57, and its tag v0.21.2, which names `chore(release): v0.21.2`; crew's `code.10` and its change a-crew-release-reports-its-own-version, landed as #73 at 81a883f3; sluice's change a-sluice-release-reports-its-own-version and its record 0111; statement clauses 24 and C.11; record 0011.
 
 ## Context and problem statement
 
@@ -46,7 +46,7 @@ Not taken:
 
 ### Consequences
 
-- Good: a build of a release's tag, by timber's CI, `nix build github:agentplot/timber/v<x.y.z>`, a flake that takes timber's package, or cargo in a checkout, reports that release's version and names its package by it, with nothing given.
+- Good: a build of a release's tag, by timber's CI, `nix build github:boomdrivedev/timber/v<x.y.z>`, a flake that takes timber's package, or cargo in a checkout, reports that release's version and names its package by it, with nothing given.
 - Neutral: the plugins are read from main, by the Claude Code marketplace and by herdr, and their manifests there say `0.0.0`, as they said `0.1.0` before; a `release` branch for them is a change of its own.
 - Neutral: Boomdrive's set takes timber's package at a tag made this way and names no version of its own (boomdrive record 0023); that is agentplot/boomdrive's, after this record's first release.
 - Neutral: when timber publishes timber, the artifact it offers is a build of a landed revision of main, which says `0.0.0` as 24 and C.11 have it, beside the GitHub release's binary, which says its version; that unit's design reconciles the two.

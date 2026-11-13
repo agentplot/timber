@@ -319,7 +319,7 @@ it on, and the repository has not switched on, marked held, once each,
 ordered by name and then by component, each with its component, how it
 would move once switched on, and the line that would switch it on, in
 the profile's own words; an empty list where it holds none back; and
-never a channel in force (131 as amended at agentplot/blueprints
+never a channel in force (131 as amended at boomdrivedev/blueprints
 1ae1cc5, C.10). The policy seam SHALL have no operation for the held
 givens apart from channels (136).
 
@@ -500,7 +500,7 @@ answer, SHALL say when that copy was read and carry the source's words
 of why it did not answer, a channel the copy holds no claim of answered
 as a chain of no claims saying so, never as an absence; a chain read
 from the source itself SHALL say so. An append SHALL never be held by
-such a copy alone (60 as amended at agentplot/blueprints b64d367, 61,
+such a copy alone (60 as amended at boomdrivedev/blueprints b64d367, 61,
 C.13, C.14).
 
 #### Scenario: An append whose predecessor is not the head

@@ -268,7 +268,7 @@ its policy requires, its promoters and who may ask for it (C.10, 131,
 82); and beneath that table, each given held off, with how it would
 move and the line that would switch it on, as the same channels answer
 carries them apart from the channels in force, so a reader sees what
-one line would give them (C.10 as amended at agentplot/blueprints
+one line would give them (C.10 as amended at boomdrivedev/blueprints
 b1267d7, 131 as amended at 1ae1cc5). Each part SHALL carry its own
 answer, so an absent layout, a channel whose policy cannot be read, or
 an unreadable channels answer leaves the rest shown, the last shown

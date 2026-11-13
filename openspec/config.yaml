@@ -5,10 +5,10 @@ context: |
   signs and pushes a build's outputs as OCI artifacts with attestations
   into a registry the owner controls. It is written in Rust, with a site
   in Astro.
-  The design is the statement of invariants in agentplot/blueprints,
+  The design is the statement of invariants in boomdrivedev/blueprints,
   design/timber/requirements.md (local:
   ~/Code/github_agentplot/blueprints/main/design/timber/requirements.md);
-  the design book is https://agentplot.github.io/blueprints/timber/.
+  the design book is https://boomdrivedev.github.io/blueprints/timber/.
   An artifact that rests on a clause cites it by bare number, (71), and
   never restates it.
 

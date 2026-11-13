@@ -10,7 +10,7 @@ decision-makers:
 # One tool organized around artifacts, channels and environments, with publish standing alone
 
 Deciders: the user, 2026-10-22 (inception D4, D9, D5; the layering requirement of `03-timber-core-model.md`).
-Sources: `agentplot/blueprints:design/timber/requirements.md` clauses 6, 17, 20, 31, 40, 92; the exploration of 2026-10-21, where the verbs were drawn as push, attest, publish, verify, sync, serve.
+Sources: `boomdrivedev/blueprints:design/timber/requirements.md` clauses 6, 17, 20, 31, 40, 92; the exploration of 2026-10-21, where the verbs were drawn as push, attest, publish, verify, sync, serve.
 
 ## Context and problem statement
 

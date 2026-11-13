@@ -9,7 +9,7 @@ decision-makers:
 
 # The scaffold is sluice's, and the binary names its revision
 
-Deciders: the user, 2026-10-23, asking for the first unit of phase 1's bolt 1, the scaffold that lets crew give the repository a bolt (`agentplot/blueprints:design/timber/models/phase-1-bolts.md`).
+Deciders: the user, 2026-10-23, asking for the first unit of phase 1's bolt 1, the scaffold that lets crew give the repository a bolt (`boomdrivedev/blueprints:design/timber/models/phase-1-bolts.md`).
 Superseded in part by record 0031: the binary says its version beside its revision and its build, and a release's tag names a release commit.
 Sources: statement clauses 24, 56, 93, C.11, section 9; ADR 0008; rules core.1, core.2, core.25, core.26, core.31, core.33; the kit standard's gate.1 to gate.4 and release.3; sluice's `Cargo.toml`, `flake.nix`, `.github/workflows/ci.yml` and `.config/sluice.toml`.
 

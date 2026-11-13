@@ -10,7 +10,7 @@ decision-makers:
 # timber reads sluice and moon, and neither knows timber
 
 Deciders: the user, 2026-10-21 ("either we build it into sluice or it's another standalone CLI"), resolved as standalone in the exploration and the inception pack (D9).
-Sources: `agentplot/blueprints:design/timber/requirements.md` clauses 12, 13, 14, 74 to 78, C.3, C.5; sluice's statement clauses 1, 10, 23 and C.6, where a run record is an in-toto statement in a DSSE envelope with the test's key and system as subject and moon's hash as digest; `agentplot/blueprints:design/sluice/proposals/landing-handoff-1.md`.
+Sources: `boomdrivedev/blueprints:design/timber/requirements.md` clauses 12, 13, 14, 74 to 78, C.3, C.5; sluice's statement clauses 1, 10, 23 and C.6, where a run record is an in-toto statement in a DSSE envelope with the test's key and system as subject and moon's hash as digest; `boomdrivedev/blueprints:design/sluice/proposals/landing-handoff-1.md`.
 
 ## Context and problem statement
 
