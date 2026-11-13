@@ -1,13 +1,13 @@
 ---
 number: 32
 title: The addresses of the moved tools name boomdrivedev, and the names timber writes stay
-status: accepted
+status: deprecated
 date: 2026-11-12
 ---
 
 # The addresses of the moved tools name boomdrivedev, and the names timber writes stay
 
-Status: accepted on the brief of the fix timbers-addresses-name-boomdrivedev, 2026-11-12, which decides the addresses in its words: "Every agentplot/ address in timber's tree of a tool that has moved names boomdrivedev/ instead: its flake inputs, its site's address, its README, policies and skills." Which names are no address, and which files keep what they say, are the fix's own choices below, cheap to change.
+Status: deprecated on 2026-11-13. It holds a one-off move, which is the plan's and no record's (crew's rule briefs.15 as amended 2026-11-13).
 Sources: the brief; `gh repo list boomdrivedev` and `gh repo list agentplot`, read on 2026-11-12; the sites' answers on 2026-11-12; record 0025, whose rename is the precedent; afterthought/kit-standard `docs/orgs/`; the OpenSpec change timbers-addresses-name-boomdrivedev.
 
 ## Context and problem statement

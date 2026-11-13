@@ -33,10 +33,9 @@ The same rule holds in flywheel-next, whose model checker reads `machines/pendin
 
 ### Consequences
 
-- Good: bolt 1 lands with a suite that passes and names the forty clauses bolts 2 to 5 will cite, each with its unit; a later unit that cites a clause must also strike its entry, or the check fails and says so.
+- Good: a later unit that cites a clause must also strike its entry, or the check fails and says so.
 - Good: no scenario cites a clause it does not exercise (core.33 holds), and no clause is silently uncovered.
 - Bad: a unit's plan may change, leaving an entry naming a unit that no longer exists; the check reads the unit's name as a note, not a reference, so such an entry is corrected by hand when the plan moves.
-- Neutral: S5 and S13 are played in bolt 1 as far as verify's answer, the claim by a signer the policy does not name listed and not counted, nothing moved, the version readable by digest; the gate's refusal and acceptance are appended under the gate's marker by bolt 4's gate unit, which strikes 25 to 30 from the register.
 
 ## More information
 

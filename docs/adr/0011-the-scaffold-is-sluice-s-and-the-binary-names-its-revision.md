@@ -31,6 +31,5 @@ Option 2. The seams are one crate because the core names no tool (core.1) and re
 
 ### Consequences
 
-- The next unit of bolt 1 adds the first trait to `timber-seams` with the profile that implements it, and the conformance scenarios that hold it.
 - A landing on `main` from here on goes through sluice; this scaffold is the last direct push.
 - The release workflow runs on the first push to `main` after this and tags `v0.1.0`, a binary that does nothing but name itself; the site's roadmap says so.
