@@ -1,6 +1,6 @@
 ---
 title: Targets
-description: The target seam, the Nix binary cache and a clan fleet's push built to fill it, and the registries, sites, stacks, functions, clusters and pulling fleets designed to be converged.
+description: The target seam, the Nix binary cache, a clan fleet's push and a Dash0 dataset's dashboards built to fill it, and the registries, sites, stacks, functions, clusters and pulling fleets designed to be converged.
 sidebar:
   order: 7
 ---
@@ -54,9 +54,14 @@ credential has nowhere in the repository's file to sit (45).
 | a Nix fleet, via Clan, pushed | push: one machine switched with `clan machines update` to the one root its version's closure names, checked against the revision's flake and realised from substituters alone, from the host that holds the machine's key; a marker on the machine, and a report claim beside the version; see below | built, `clan` |
 | a Nix fleet, via Clan, pulled | pull: each machine verifies and applies the release assigned to it, realising store paths from the cache | designed |
 | a Nix binary cache, through Attic | push: the version's closures pushed to the cache with `attic push`, from the host that built them, with attic's own credential; current and report unread, since a cache keeps no marker; see below | built, `nix_cache` |
+| Dash0's dashboards | push: each dashboard the version holds applied to one dataset by its fixed identifier with Dash0's own CLI, from the host that holds the dataset's write token, and each one an earlier version applied that this one does not hold removed; a marker dashboard in the dataset; see below | built, `dash0` |
 
 A target's credential is the environment's, reached at the moment of
-use; timber keeps none.
+use; timber keeps none. Where a target's own tool reads its credential
+from a file, the host's bindings file names that file's path in
+`[credentials]`, by the name the environment's table gives it, and
+timber hands the path to the tool, which alone reads it (118; see
+[the host's bindings](/timber/guides/self-hosting/#the-hosts-bindings)).
 
 ## The Nix binary cache
 
@@ -359,6 +364,152 @@ answer carries the words, timber runs nothing for it, and no channel
 moves. An unread report signs nothing and tells no gate. The exit is
 the worst of the apply's answer, the report's and each channel's, a
 held channel counting as refused.
+
+## Dash0's dashboards
+
+The Dash0 target, `dash0`, converges one dataset of
+[Dash0](https://www.dash0.com) on the dashboards a version holds, each
+by its fixed identifier, from the host that holds the dataset's write
+token, with Dash0's own CLI (C.12). A repository of dashboards keeps
+one Perses file each, every one naming its identifier, and its build
+task leaves them as one or more files the component declares as
+outputs, packed by the file projection as any file is. A file may hold
+one dashboard or several, separated by `---`.
+
+The environment's `dash0` table names four keys, all required, and no
+others:
+
+| key | what |
+|---|---|
+| `api` | the address of Dash0's API, `https://` and a host, since the token is sent there |
+| `dataset` | the dataset's identifier: no whitespace, no `/`, not beginning `-` |
+| `credential` | the name of the host's credential, which its bindings file's `[credentials]` gives the path of |
+| `dashboards` | one or more of the component's outputs whose files are dashboard files, each once |
+
+```toml
+[environments.dashboards.deneb]
+channel = "stable"
+target.dash0 = { api = "https://api.us-east-1.aws.dash0.com", dataset = "deneb", credential = "dash0-dashboards", dashboards = ["dashboards"] }
+```
+
+Any other key, a key missing, or one of another form is unreadable at
+every operation, naming the environment, the key and the four the table
+reads, never the key's value, and nothing runs. There is no key for a
+token, a path or a profile (45).
+
+### The credential
+
+The token is the host's. The host's bindings file names the path of a
+file holding only it, under the name the table's `credential` gives:
+
+```toml
+[credentials]
+dash0-dashboards = "~/.local/share/secrets/dash0-dashboards"
+```
+
+An environment whose credential the host's file does not name is
+unreadable, naming the credential and the bindings file, and nothing
+runs. timber never opens, copies or passes the file's contents: it
+hands the path to Dash0's CLI as `--auth-token-file`, which alone reads
+it, when a run reaches Dash0's API (64).
+
+Every run of the CLI takes each setting as a flag and nothing of the
+host's own `dash0`: it runs in a folder of its own under the system's
+temporary directory, removed when it ends, with an empty configuration
+folder, and with every `DASH0_*` variable removed from its environment:
+
+```text
+dash0 --agent-mode --no-skill-hint --config-dir <run>/config \
+      --auth-token-file <path> <subcommand…> --api-url <api> --dataset <dataset>
+```
+
+The `dash0` run is the one on `PATH`. Run `timber apply` in the
+dashboards repository's own shell, so the CLI that validated its
+dashboards in the repository's checks is the CLI that applies them. A
+`dash0` that hands a token of its own, such as a read-only one, is
+refused by Dash0 at the first write, and the apply answers Dash0's
+words; it never writes with a token the table did not name.
+
+### What apply checks and runs
+
+Apply judges the channel's head as for any target, then runs these
+steps, and stops at the first that fails, answering it:
+
+1. It reads the version's index by digest, refused where it names
+   another publishing repository than the checkout's, or none, and the
+   file of each output `dashboards` names, by digest. An output the
+   index names no file of is refused, naming the output and the
+   version (42).
+2. It writes the files into its own folder and reads every document's
+   kind and identifier from one dry run of the CLI, `dash0 apply -f
+   <folder> --dry-run`, which takes no token, address or dataset and
+   reaches no API. The version is refused, naming the output and the
+   document, where a document is neither a `Dashboard` nor a
+   `PersesDashboard`, a dashboard has no identifier, two documents give
+   one identifier, one gives the marker's, or an output's file holds no
+   dashboard; a dry run the CLI refuses is answered in its words.
+   Nothing has reached Dash0.
+3. It reads the marker, and what it names.
+4. It writes the marker naming those together with every identifier of
+   the version, and the version it is applying, before any dashboard is
+   applied.
+5. It applies every file with one `dash0 apply`, which creates or
+   updates each dashboard by its identifier.
+6. It deletes, with `dash0 dashboards delete <id> --force`, each
+   dashboard the marker named that the version does not hold, and no
+   other. One already gone counts as deleted.
+7. It writes the marker naming the version and its identifiers alone.
+
+Dash0's words on a failure are the answer, unread, as the CLI wrote
+them, and nothing after the failed step runs (59).
+
+### The marker
+
+What timber applied to a dataset for an environment is a dashboard of
+timber's own in that dataset, beside the dashboards it records, so any
+reader of the dataset reads it with no timber process running (20,
+119). Its identifier is `timber-` and the first 32 hexadecimal
+characters of the SHA-256 of `<owner>/<name>/<component>/<environment>`,
+the checkout's repository, so each environment of each repository keeps
+one. It sits in Dash0's folder `/timber`, named `timber: <owner>/<name>
+<component> <environment>`, and its description holds the record:
+
+```json
+{ "marker": "timber/dash0/v1",
+  "repository": "madswan-dev/dashboards", "component": "dashboards", "environment": "deneb",
+  "index": "sha256:…", "version": "1.3.0",
+  "dashboards": ["overview", "sluice"],
+  "applying": { "index": "sha256:…", "version": "1.4.0" } }
+```
+
+`index` and `version` are the version last applied in full.
+`dashboards` names every identifier timber may have applied there and
+not removed. `applying` is there only while an apply runs, or after one
+that did not finish.
+
+current and report read the marker with `dash0 dashboards get <id> -o
+json`. They answer its version applied in full, and report when Dash0
+says the marker was last written. They answer unread, never a digest,
+where there is no marker, naming the dataset; where Dash0 holds it
+deleted, naming when; where it names an apply that did not finish,
+naming both versions; and where it is no record of this form or names
+another repository, component or environment, saying what it holds (89,
+91, 119). A report claim is signed once the marker names the index
+applied, as for the clan push profile.
+
+### What is removed, and what never is
+
+An apply removes only what the marker names and the version does not
+hold. Since the marker names every dashboard before it is applied, an
+apply that stops anywhere leaves each dashboard it applied named for
+the next apply to remove. A dashboard made by hand in Dash0 is never
+named, so never removed, and where the dataset holds no marker an apply
+removes nothing (C.12). A marker deleted in Dash0 still names what
+timber applied: the next apply removes what it names and writes it
+back. Moved back and applied, an environment loses the dashboards the
+newer version added (34). An environment moved to another dataset
+leaves its dashboards and its marker in the old one, for a person to
+remove there.
 
 ## Adding one
 

@@ -34,7 +34,7 @@ each task's check is its own.
 
 ## 5. The site
 
-- [ ] 5.1 In `site/src/content/docs/guides/integrations/targets.mdx`, add a section on the Dash0 target (design D2 to D8). It covers the `target.dash0` table, with an example; the credential named by `[credentials]` and handed by its path; that `timber apply` runs where the repository's own `dash0` is on `PATH`; what apply checks and runs, in order; the marker in `/timber` and what it records; and what is removed, and what never is. Add its row to the members table as built, `dash0`. Add it to the targets line of `integrations/index.mdx`. In `site/src/content/docs/guides/self-hosting.mdx`, add `[credentials]` to the example file and the list of what each table binds. Verify with `devenv shell -- moon run site:build`.
+- [x] 5.1 In `site/src/content/docs/guides/integrations/targets.mdx`, add a section on the Dash0 target (design D2 to D8). It covers the `target.dash0` table, with an example; the credential named by `[credentials]` and handed by its path; that `timber apply` runs where the repository's own `dash0` is on `PATH`; what apply checks and runs, in order; the marker in `/timber` and what it records; and what is removed, and what never is. Add its row to the members table as built, `dash0`. Add it to the targets line of `integrations/index.mdx`. In `site/src/content/docs/guides/self-hosting.mdx`, add `[credentials]` to the example file and the list of what each table binds. Verify with `devenv shell -- moon run site:build`.
 
 ## 6. The specs
 
