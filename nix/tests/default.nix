@@ -29,5 +29,6 @@ in
   test = lines [
     ./file.nix
     ./darwin.nix
+    ./nixos.nix
   ];
 }

@@ -106,5 +106,9 @@
         timber = moduleOf "darwin" ./nix/modules/darwin.nix;
         default = timber;
       };
+      nixosModules = rec {
+        timber = moduleOf "nixos" ./nix/modules/nixos.nix;
+        default = timber;
+      };
     };
 }
