@@ -61,7 +61,7 @@ mod table;
 mod tests;
 
 use std::collections::BTreeMap;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use timber_seams::{
     Answer, Digest, Environment, Head, Not, RepositoryName, Running, Seam, Source, Store, Target,
@@ -106,11 +106,22 @@ impl Dash0 {
         repository: Answer<RepositoryName>,
         credentials: &Credentials,
     ) -> Dash0 {
+        Dash0::with_program(store, repository, credentials, "dash0")
+    }
+
+    /// The target as [`Dash0::new`] makes it, running Dash0's CLI as
+    /// `program`.
+    pub fn with_program(
+        store: Box<dyn Store>,
+        repository: Answer<RepositoryName>,
+        credentials: &Credentials,
+        program: impl Into<PathBuf>,
+    ) -> Dash0 {
         Dash0::with_backend(
             store,
             repository,
             credentials,
-            Box::new(Cli::new("dash0", &Dash0::source())),
+            Box::new(Cli::new(program, &Dash0::source())),
         )
     }
 
