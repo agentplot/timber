@@ -793,7 +793,9 @@ mod tests {
             owner: "afterthought".into(),
             name: "swancloud".into(),
         };
-        binding.seams.targets = profiles::target::bound(&store, &s.repo, Ok(repository)).unwrap();
+        let credentials = crate::bindings::Credentials::default();
+        binding.seams.targets =
+            profiles::target::bound(&store, &s.repo, Ok(repository), &credentials).unwrap();
         let before = files(s.dir.path());
         let (_, printed) = s.run_over(&Ok(binding), &["apply", "cache", "--json"]);
         let printed: Value = serde_json::from_str(&printed).unwrap();

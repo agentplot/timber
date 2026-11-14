@@ -693,8 +693,9 @@ impl Landing for NoLanding {
 /// own signer, the one `[signing]` names, before the signers `[trust]`
 /// names, what verifies it read before the store is bound. An apply binds
 /// every target profile built beside the store, each through a store
-/// binding of its own (92; the Nix cache unit's design D3).
-/// Every table is read, `[gate]` among them, and nothing is made: a
+/// binding of its own (92; the Nix cache unit's design D3), and each
+/// handed the credentials `[credentials]` names (118; the Dash0 target's
+/// design D3). Every table is read, `[gate]` among them, and nothing is made: a
 /// publish or a push makes the layout at its store's first operation, so
 /// path with `~/` expanded, so the record names a directory a reader
 /// finds whoever's home it was written under (61, 118; design D9). The
@@ -787,6 +788,7 @@ pub fn bind(
             &|| profiles::store::bind(store, false),
             repository,
             repository_named(repository, remote.as_deref()),
+            &bindings.credentials,
         )?;
         let keeper = ledger(&opened)?;
         (bound, keeper, BTreeMap::new(), targets)
