@@ -28,6 +28,7 @@ const DRIVER: &str = "bolt 5 · the driver and the pool run publish";
 const CATALOGUED: &str = "every-claim-takes-the-catalogued-kind-that-carries-it";
 const KEYLESS: &str = "phase 2 · keyless signing";
 const REBUILD: &str = "phase 2 · the verifier's rebuild";
+const LINK: &str = "phase 2 · a publish's link";
 const PHASE_2: &str = "phase 2";
 
 // One entry per line, as the module says, wider than the formatter's
@@ -42,6 +43,7 @@ pub const PENDING: &[Pending] = &[
     Pending { clause: 55, unit: REBUILD, why: "A verifier's rebuild reads no cache entry it did not write, and phase 1 leaves the rebuild to phase 2." },
     Pending { clause: 112, unit: REBUILD, why: "A verifier compares the digests of outputs, and phase 1 leaves the rebuild to phase 2." },
     Pending { clause: 133, unit: REBUILD, why: "A verifier's rebuild reads no compilation's cache another party wrote, and phase 1 leaves the rebuild to phase 2." },
+    Pending { clause: 144, unit: LINK, why: "A publish signs each output's provenance and the publisher's layout policy about its index, and no link naming the index and its landing; a link takes the form the family's tools share (weir 114), which weir's statement spells in no form yet, and no unit of phase 1 carves it." },
     Pending { clause: 44, unit: PHASE_2, why: "Pushed to or pulling is the environment's own, and every target of bolt 6 is pushed to; the Nix fleet's pull profile, the first that pulls, comes in phase 2." },
     Pending { clause: 126, unit: PHASE_2, why: "The roster is a target's, and no target of bolt 6 holds one; the pull profile's roster comes in phase 2." },
     Pending { clause: 127, unit: PHASE_2, why: "A channel declared by a pattern over branch names, which no unit of phase 1 carves." },
@@ -177,6 +179,20 @@ mod tests {
             assert_eq!(entry.unit, waits_on, "{clause} waits on another unit");
             assert!(!entry.why.trim().is_empty(), "{clause} waits for no reason");
         }
+    }
+
+    #[test]
+    fn the_clause_the_statement_added_at_144_waits_named() {
+        assert!(
+            !citations().iter().any(|c| c.cites.contains(&144)),
+            "144 is cited"
+        );
+        let entry = PENDING
+            .iter()
+            .find(|p| p.clause == 144)
+            .expect("144 is not in the register");
+        assert_eq!(entry.unit, LINK, "144 waits on another unit");
+        assert!(!entry.why.trim().is_empty(), "144 waits for no reason");
     }
 
     #[test]
