@@ -11,3 +11,7 @@ inputs:
     inputs:
       nixpkgs:
         follows: nixpkgs
+  # Dash0's CLI, which the Dash0 target's proof by hand runs (devenv.nix),
+  # with its own inputs as its lock pins them.
+  dash0-cli:
+    url: github:dash0hq/dash0-cli/v1.20.0
