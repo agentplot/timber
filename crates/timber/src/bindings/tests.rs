@@ -145,6 +145,81 @@ fn each_table_is_read() {
     );
 }
 
+/// The files timber's flake module renders for a laptop and for a fleet
+/// (nix/tests/files, which the flake's cases hold the module's text to
+/// byte for byte), read as a host's bindings file: every table the module
+/// names is one the reader binds, as the settings name it (118; record
+/// 0035).
+#[test]
+fn the_modules_files_are_read_as_written() {
+    let host = Host::new();
+    host.write(include_str!("../../../../nix/tests/files/laptop.toml"));
+    let laptop = host.read().unwrap();
+    let store = laptop.store.unwrap();
+    assert_eq!(store.key(), "layout");
+    assert_eq!(
+        store.path(),
+        Ok(host.home().join(".local/share/timber/layout"))
+    );
+    let landing = laptop.landing.unwrap();
+    assert_eq!(landing.key(), "branch");
+    assert_eq!(landing.options::<Remote>(), Ok(Remote { remote: None }));
+    let ledger = laptop.ledger.unwrap();
+    assert_eq!(ledger.key(), "git_ref");
+    assert_eq!(
+        ledger.options::<Remote>(),
+        Ok(Remote {
+            remote: Some("origin".into())
+        })
+    );
+    assert_eq!(
+        laptop.signing,
+        Some(Signing::HostKey {
+            signer: SignerId::new("host-a"),
+            key: host.home().join(".config/timber/signing"),
+        })
+    );
+    assert_eq!(Teller::of(laptop.gate.as_ref()), Ok(Teller::Publish));
+    assert!(laptop.gate.is_some(), "the laptop's [gate] read as absent");
+    assert_eq!(
+        laptop.trust,
+        [NamedSigner {
+            id: SignerId::new("host-b"),
+            verified_by: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGt host-b".into(),
+            kinds: vec![],
+            checks: vec![],
+        }]
+    );
+
+    host.write(include_str!("../../../../nix/tests/files/fleet.toml"));
+    let fleet = host.read().unwrap();
+    let store = fleet.store.unwrap();
+    assert_eq!(store.key(), "registry");
+    assert_eq!(store.value().as_str(), Some("registry.example.com/timber"));
+    let landing = fleet.landing.unwrap();
+    assert_eq!(landing.key(), "sluice");
+    assert_eq!(
+        landing.options::<Remote>(),
+        Ok(Remote {
+            remote: Some("origin".into())
+        })
+    );
+    let ledger = fleet.ledger.unwrap();
+    assert_eq!(ledger.key(), "store");
+    assert_eq!(ledger.value().as_table().map(|t| t.is_empty()), Some(true));
+    assert_eq!(
+        fleet.signing,
+        Some(Signing::Kms(
+            profiles::signer::kms::KeyArn::parse(ARN).unwrap()
+        ))
+    );
+    assert_eq!(
+        Teller::of(fleet.gate.as_ref()),
+        Ok(Teller::Job("the release job a push to main wakes".into()))
+    );
+    assert_eq!(fleet.trust, []);
+}
+
 #[test]
 fn a_key_under_the_home_is_expanded_and_tables_left_out_are_none() {
     let host = Host::new();
@@ -176,6 +251,10 @@ fn no_file_reads_as_an_empty_file() {
         gate: None,
         signing: None,
         trust: Vec::new(),
+        credentials: Credentials {
+            file: host.file(),
+            paths: BTreeMap::new(),
+        },
     };
     assert_eq!(host.read(), Ok(empty.clone()));
     host.write("");
@@ -278,7 +357,7 @@ fn what_the_repository_binds_and_no_table_of_the_file_are_unreadable_naming_the_
         ),
         (
             "deploy",
-            "[deploy] is no table of the bindings file, which binds [store], [landing], [ledger], [signing], [gate] and [trust]",
+            "[deploy] is no table of the bindings file, which binds [store], [landing], [ledger], [signing], [gate], [trust] and [credentials]",
         ),
     ] {
         host.write(&format!("[store]\nlayout = \"/layout\"\n\n[{table}]\nx = 1\n"));
@@ -303,6 +382,99 @@ fn targets_named_in_the_hosts_file_are_unreadable_for_every_command_and_make_not
         );
     }
     assert!(!layout.exists(), "a refused file made {}", layout.display());
+}
+
+// Requirement: The file names the credentials a target's tool reads
+
+#[test]
+fn credentials_a_home_path_is_expanded_and_the_file_at_it_never_opened() {
+    use std::os::unix::fs::PermissionsExt;
+
+    let host = Host::new();
+    let secrets = host.home().join(".local/share/secrets");
+    fs::create_dir_all(&secrets).unwrap();
+    // A file no one may open, and one that is not there: reading the
+    // bindings opens neither.
+    let sealed = secrets.join("dash0-dashboards");
+    fs::write(&sealed, "auth_abc").unwrap();
+    fs::set_permissions(&sealed, fs::Permissions::from_mode(0o000)).unwrap();
+    host.write(
+        "[credentials]\n\
+         dash0-dashboards = \"~/.local/share/secrets/dash0-dashboards\"\n\
+         elsewhere = \"/run/secrets/not-there\"\n",
+    );
+    let credentials = host.read().unwrap().credentials;
+    assert_eq!(credentials.file, host.file());
+    assert_eq!(
+        credentials.paths,
+        BTreeMap::from([
+            ("dash0-dashboards".to_string(), sealed.clone()),
+            (
+                "elsewhere".to_string(),
+                PathBuf::from("/run/secrets/not-there")
+            ),
+        ])
+    );
+    assert_eq!(credentials.path("dash0-dashboards"), Some(sealed.as_path()));
+    assert_eq!(credentials.path("another"), None);
+    fs::set_permissions(&sealed, fs::Permissions::from_mode(0o600)).unwrap();
+}
+
+// Requirement: A broken credentials table binds nothing
+
+#[test]
+fn credentials_a_token_in_place_of_a_path_is_unreadable_naming_the_key_and_binds_nothing() {
+    let host = Host::new();
+    let layout = host.dir.path().join("layout");
+    host.write(&format!(
+        "[store]\nlayout = \"{}\"\n\n[landing]\nbranch = {{}}\n\n\
+         [credentials]\ndash0-dashboards = \"auth_abc\"\n",
+        layout.display()
+    ));
+    let said = host.unreadable(Some("[credentials] dash0-dashboards"));
+    assert_eq!(
+        said,
+        "[credentials] dash0-dashboards is no path absolute or beginning ~/; [credentials] \
+         names the path of the file holding each credential, never the credential"
+    );
+    for command in [For::Apply, For::Publish, For::Verify, For::Status] {
+        let (at, said) = unreadable_at(&host, host.bind(host.dir.path(), command));
+        assert_eq!(at, "[credentials] dash0-dashboards");
+        assert!(!said.contains("auth_abc"), "{said}");
+    }
+    assert!(!layout.exists(), "a refused file made {}", layout.display());
+}
+
+#[test]
+fn credentials_a_relative_path_or_a_value_that_is_no_string_is_unreadable_naming_the_key() {
+    let host = Host::new();
+    host.write("[credentials]\ndash0-dashboards = \"secrets/dash0-dashboards\"\n");
+    let said = host.unreadable(Some("[credentials] dash0-dashboards"));
+    assert!(
+        said.contains("is no path absolute or beginning ~/"),
+        "{said}"
+    );
+    assert!(!said.contains("secrets/"), "{said}");
+    host.write("[credentials]\ndash0-dashboards = { path = \"/run/secrets/dash0\" }\n");
+    assert_eq!(
+        host.unreadable(Some("[credentials] dash0-dashboards")),
+        "[credentials] dash0-dashboards is not a path in a string; [credentials] names the path \
+         of the file holding each credential, never the credential"
+    );
+    host.write("credentials = \"/run/secrets\"\n");
+    let said = host.unreadable(Some("credentials"));
+    assert!(said.ends_with("[trust] and [credentials]"), "{said}");
+}
+
+#[test]
+fn credentials_no_table_names_none_and_publish_binds_as_before() {
+    let host = Host::new();
+    let layout = host.dir.path().join("layout");
+    let publish = bound(&host, &layout, true, For::Publish).unwrap();
+    assert_eq!(publish.signer, Some(SignerId::new("laptop")));
+    let credentials = host.read().unwrap().credentials;
+    assert_eq!(credentials.file, host.file());
+    assert!(credentials.paths.is_empty(), "{credentials:?}");
 }
 
 #[test]
@@ -570,7 +742,7 @@ fn an_apply_binds_every_target_built_through_a_store_it_never_makes() {
     let before = files(&layout);
     let binding = bound(&host, &layout, true, For::Apply).unwrap();
     let profiles: Vec<&str> = binding.seams.targets.keys().map(|p| p.as_str()).collect();
-    assert_eq!(profiles, ["clan", "nix_cache"]);
+    assert_eq!(profiles, ["clan", "dash0", "nix_cache"]);
     assert!(binding
         .seams
         .target(&timber_seams::TargetProfile::new("nix_cache"))

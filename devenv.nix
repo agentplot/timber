@@ -2,6 +2,7 @@
   pkgs,
   lib,
   config,
+  inputs,
   ...
 }:
 
@@ -250,6 +251,15 @@ let
     }
   );
 
+  # Dash0's CLI at the release the Dash0 target's proof by hand
+  # (crates/timber/tests/dash0.rs, `check-dash0`) runs, from Dash0's own
+  # flake at its tag (devenv.yaml). The proof runs it by
+  # TIMBER_TOOLS_DASH0_CLI, since on deneb the `dash0` on a person's path is
+  # swancloud's wrapper, which hands its read-only token. timber itself runs
+  # the `dash0` on PATH, which where a host runs `timber apply` in a
+  # dashboards repository's shell is that repository's own pin.
+  dash0 = inputs.dash0-cli.packages.${pkgs.stdenv.hostPlatform.system}.dash0;
+
   # devenv's own script that makes the files it declares, Claude Code's
   # among them, run from the repository's root.
   writeFiles = ''
@@ -268,6 +278,20 @@ let
     ${protoHome}
     eval "$(${proto}/bin/proto activate bash --export --no-bin --config-mode upwards 2>/dev/null)"
   '';
+
+  # The flake's checks' tools (record 0035): the nix nix:typecheck and
+  # nix:test evaluate with, and the statix nix:lint runs. nixpkgs' builds,
+  # pinned by devenv.lock and asserted to be these versions, so every host
+  # that runs the gate runs the same (core.26). treefmt.nix's nixfmt and
+  # deadnix are from the same nixpkgs. The nix is reached by its path,
+  # TIMBER_FLAKE_NIX, and is not on PATH: the tools layer's Nix cache and
+  # fleet tests run the host's own nix, which devenv runs on.
+  flakeNix =
+    assert pkgs.nix.version == "2.34.8";
+    pkgs.nix;
+  statix =
+    assert pkgs.statix.version == "0.5.8-unstable-2026-07-17";
+    pkgs.statix;
 
   # The lint gate.
   lint = pkgs.writeShellApplication {
@@ -391,15 +415,28 @@ in
     # devenv runs on.
     pkgs.attic-client
     pkgs.attic-server
+    # The Dash0 target's proof by hand (crates/timber/tests/dash0.rs).
+    dash0
     # The Claude Code plugin's checks (plugins/claude.sh).
     claude
     # The changes and specs, and the skills and commands it writes under
     # .claude/, which root:toolchain holds to its pin.
     openspec
+    # The flake's lint (nix/moon.yml).
+    statix
   ]
   ++ lib.optional (sluice != null) sluice;
 
   env.PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright-driver.browsers-chromium}";
+
+  # The flake's checks (nix/check.sh): the pinned nix by its path, and the
+  # flake's inputs as flake.lock locks them (nix/inputs.nix), fetched by
+  # this shell outside the gate's sandbox and given to nix:typecheck and
+  # nix:test by their store paths, which they read with no network and no
+  # nix daemon, so every host evaluates the flake against the inputs the
+  # lock pins (core.26, core.38; record 0035).
+  env.TIMBER_FLAKE_NIX = "${flakeNix}/bin/nix";
+  env.TIMBER_FLAKE_INPUTS = builtins.toJSON (import ./nix/inputs.nix { }).paths;
 
   # The tools layer's tests run the pinned sluice, ssh-keygen, registries and
   # attic by these paths: in a moon task, moon's Rust toolchain puts cargo's
@@ -413,6 +450,9 @@ in
   env.TIMBER_TOOLS_ATTIC = "${pkgs.attic-client}/bin/attic";
   env.TIMBER_TOOLS_ATTICD = "${pkgs.attic-server}/bin/atticd";
   env.TIMBER_TOOLS_ATTICADM = "${pkgs.attic-server}/bin/atticadm";
+  # The Dash0 target's proof by hand runs this CLI, never the `dash0` on a
+  # person's path, which on deneb is swancloud's wrapper.
+  env.TIMBER_TOOLS_DASH0_CLI = "${dash0}/bin/dash0";
 
   # Claude Code's project files (ADR 0030, after agentplot/boomdrive's
   # record 0022): .mcp.json from the servers below and

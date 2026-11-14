@@ -56,8 +56,9 @@ The operator's bindings for a host are one file,
 is set, beside sluice's own `config.toml` and in the same form, readable
 with any file reader (118). A host needs none: the file is for pointing
 a host at a registry, a key service or a shared ledger. It names the
-store, the landing, the ledger, the signer and what tells the gate, and
-nothing the repository binds (92):
+store, the landing, the ledger, the signer, what tells the gate and the
+credentials a target's tool reads, and nothing the repository binds
+(92):
 
 ```toml
 [store]
@@ -81,6 +82,9 @@ key = "~/.config/timber/signing"
 [gate]                            # what tells the gate, C.16
 publish = {}                      # also with no [gate], 118
                                  # or: job = "<the job's words>"
+
+[credentials]                     # each a file holding only that credential, 118
+dash0-dashboards = "~/.local/share/secrets/dash0-dashboards"
 ```
 
 With no file, and for each table a file leaves out, the host is bound
@@ -109,6 +113,8 @@ to the given ones (118):
   command signs nothing.
 - **What tells the gate**: the host's own publish, as `[gate] publish =
   {}` binds it (130).
+- **The credentials**: none, so an environment whose target names a
+  credential is unreadable, naming it and the file.
 
 A file that names a table binds exactly what it names, and leaves the
 rest given: `[store] registry` alone writes into that registry and keeps
@@ -184,6 +190,15 @@ empty file is no file.
   words. A file with no `[gate]` binds `publish`, the host's default
   (118), so a host whose gate is elsewhere names its `job`. A `[gate]`
   naming no key, two, or another is refused, naming it.
+- `[credentials]` names each credential a target's own tool reads, by
+  the name an environment's target table gives it, as the path of a file
+  holding only that credential, absolute or beginning `~/` (118). The
+  file never holds a credential, and timber never opens the file a path
+  names: it hands the path to the target, which hands it to its tool,
+  as the [Dash0 target](/timber/guides/integrations/targets/#dash0s-dashboards)
+  hands Dash0's CLI its token (64). A value that is no string, or a path
+  of neither form, is unreadable naming the file and `[credentials]
+  <name>`, never the value, and binds nothing in its place.
 - The build and the projections are the repository's to bind, not the
   host's: moon is the build, and the policy file names each output's task
   and the projection that packs it. A `[build]` or `[projections]` table
@@ -251,6 +266,65 @@ declared component's versions from before:
 
 Cache entries a push wrote into the declared repository before are read
 by nothing and may be removed; an entry gone is a build again (54).
+
+### On nix-darwin and NixOS
+
+A host configured by Nix writes the file from timber's own flake, with
+nothing else. The flake gives `darwinModules.timber` and
+`nixosModules.timber`, each also `default`, declaring `services.timber`;
+a system that imports it directly and through another flake's module
+declares it once:
+
+```nix
+# flake.nix: inputs.timber.url = "github:boomdrivedev/timber";
+# and timber.darwinModules.timber, or timber.nixosModules.timber,
+# among the system's modules.
+services.timber = {
+  enable = true;
+  user = "alice"; # NixOS only: the user who runs timber
+  settings = {
+    store.registry = "123456789012.dkr.ecr.us-east-1.amazonaws.com/timber";
+    signing.kms = "arn:aws:kms:us-east-1:123456789012:key/<key id>";
+    credentials.dash0 = "/run/secrets/dash0-token";
+  };
+};
+```
+
+- **`settings` is the file, under its own names.** Each table and key is
+  named as the file names it, `store.layout`, `landing.branch.remote`,
+  `ledger.git_ref.remote`, `signing.key`, `gate.job`,
+  `trust.<signer>.ssh`, and the module renders the file from them. A
+  table or key left unset is left out of the file, so the given binding
+  holds, as above (118). A table set empty, `landing.branch = { }`, is
+  written, since it binds its profile. A key the module does not
+  declare is written as given, for timber to judge at its read: the
+  module holds none of timber's rules, which refuse a table naming two
+  profiles, or `kms` beside `signer`, as for a hand-written file.
+- **A key and a credential are named by their paths.** The file is in
+  the Nix store, which every user reads, so `signing.key` and each
+  credential name a file on the host, absolute or under `~/`, put there
+  by hand or by the host's handling of secrets and readable by the user
+  who runs timber alone. One under the store directory, one that is no
+  path, such as a key's or a token's own text, or one given as a Nix
+  path fails evaluation, naming the option. The module reads and copies
+  neither (64).
+- **The file is linked for the user who runs timber.** The activation
+  links `~/.config/timber/config.toml` to the rendered file: on
+  nix-darwin for the system's primary user, and on NixOS for
+  `services.timber.user`, which has no default, in that user's own
+  activation. A file there that is no link is moved once to
+  `config.toml.before-nix`, both paths named; where that is taken
+  already, neither changes, and the activation says so and goes on.
+  timber reads the file at its next command, and a serving process at
+  its next request, as after a hand edit. A user who points
+  `XDG_CONFIG_HOME` elsewhere links that folder's file by hand.
+- **The package, and nothing else.** The module puts `services.timber.package`,
+  the flake's timber for the host's system, in the system profile; a host
+  may replace it, or set it to `null` to install none. It starts nothing:
+  no launchd agent or daemon and no systemd unit, so the first asker that
+  finds no serving process starts it (114). It writes no other tool's
+  file and nothing under the data directory, where timber makes its given
+  layout and host key itself.
 
 ## The host's serving process
 

@@ -1,0 +1,15 @@
+# Written by timber's flake module from services.timber.settings; a change goes there.
+
+[gate]
+job = "the release job a push to main wakes"
+
+[landing.sluice]
+remote = "origin"
+
+[ledger.store]
+
+[signing]
+kms = "arn:aws:kms:us-west-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab"
+
+[store]
+registry = "registry.example.com/timber"

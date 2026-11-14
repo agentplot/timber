@@ -5,10 +5,12 @@ dependsOn: [seams, core, fakes, conformance]
 
 tasks:
   # The crate's tests over the fakes and git alone, herdr_documents among
-  # them, which compares the herdr plugin's documents with the binary's.
+  # them, which compares the herdr plugin's documents with the binary's,
+  # and the bindings reader's test of the files the flake's module renders
+  # (record 0035).
   test:
     command: 'cargo test -p timber'
-    inputs: ['/crates/timber/**/*', '/crates/timber-seams/**/*', '/crates/timber-core/**/*', '/crates/timber-fakes/**/*', '/crates/timber-conformance/**/*', '/Cargo.toml', '/Cargo.lock', '/devenv.nix', '/devenv.lock', '/plugins/herdr/tests/docs/**/*']
+    inputs: ['/crates/timber/**/*', '/crates/timber-seams/**/*', '/crates/timber-core/**/*', '/crates/timber-fakes/**/*', '/crates/timber-conformance/**/*', '/Cargo.toml', '/Cargo.lock', '/devenv.nix', '/devenv.lock', '/plugins/herdr/tests/docs/**/*', '/nix/tests/files/**/*']
     tags: [cargo-test, check-fast]
     options: {runFromWorkspaceRoot: true}
   # The profiles' tests that run moon, sluice and ssh-keygen against
@@ -60,4 +62,18 @@ tasks:
     command: 'cargo test -p timber --features tools --test nix_fleet_push'
     inputs: ['/crates/timber/**/*', '/crates/timber-seams/**/*', '/crates/timber-core/**/*', '/crates/timber-fakes/**/*', '/crates/timber-conformance/**/*', '/Cargo.toml', '/Cargo.lock', '/devenv.nix', '/devenv.lock', '/.prototools', '$TIMBER_TOOLS_FLEET']
     tags: [check-fleet]
+    options: {runFromWorkspaceRoot: true}
+  # The Dash0 target's group, and applies of three versions with a
+  # dashboard made by hand beside them, against the throwaway dataset the
+  # host names in devenv.local.nix (env.TIMBER_TOOLS_DASH0, as
+  # `<api>#<dataset>#<token file>`), with the CLI the tree pins
+  # (TIMBER_TOOLS_DASH0_CLI), behind the `tools` feature; it refuses to run,
+  # naming the setting, on a host that names none. Its token is a file a
+  # person makes, which writes dashboards to that dataset, so it runs
+  # outside the gate under a tag of its own, by hand with
+  # `moon run ':#check-dash0'` (core.38).
+  dash0:
+    command: 'cargo test -p timber --features tools --test dash0'
+    inputs: ['/crates/timber/**/*', '/crates/timber-seams/**/*', '/crates/timber-core/**/*', '/crates/timber-fakes/**/*', '/crates/timber-conformance/**/*', '/Cargo.toml', '/Cargo.lock', '/devenv.nix', '/devenv.lock', '/.prototools', '$TIMBER_TOOLS_DASH0']
+    tags: [check-dash0]
     options: {runFromWorkspaceRoot: true}
