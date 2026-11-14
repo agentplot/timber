@@ -269,6 +269,20 @@ let
     eval "$(${proto}/bin/proto activate bash --export --no-bin --config-mode upwards 2>/dev/null)"
   '';
 
+  # The flake's checks' tools (record 0035): the nix nix:typecheck and
+  # nix:test evaluate with, and the statix nix:lint runs. nixpkgs' builds,
+  # pinned by devenv.lock and asserted to be these versions, so every host
+  # that runs the gate runs the same (core.26). treefmt.nix's nixfmt and
+  # deadnix are from the same nixpkgs. The nix is reached by its path,
+  # TIMBER_FLAKE_NIX, and is not on PATH: the tools layer's Nix cache and
+  # fleet tests run the host's own nix, which devenv runs on.
+  flakeNix =
+    assert pkgs.nix.version == "2.34.8";
+    pkgs.nix;
+  statix =
+    assert pkgs.statix.version == "0.5.8-unstable-2026-07-17";
+    pkgs.statix;
+
   # The lint gate.
   lint = pkgs.writeShellApplication {
     name = "lint";
@@ -396,10 +410,21 @@ in
     # The changes and specs, and the skills and commands it writes under
     # .claude/, which root:toolchain holds to its pin.
     openspec
+    # The flake's lint (nix/moon.yml).
+    statix
   ]
   ++ lib.optional (sluice != null) sluice;
 
   env.PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright-driver.browsers-chromium}";
+
+  # The flake's checks (nix/check.sh): the pinned nix by its path, and the
+  # flake's inputs as flake.lock locks them (nix/inputs.nix), fetched by
+  # this shell outside the gate's sandbox and given to nix:typecheck and
+  # nix:test by their store paths, which they read with no network and no
+  # nix daemon, so every host evaluates the flake against the inputs the
+  # lock pins (core.26, core.38; record 0035).
+  env.TIMBER_FLAKE_NIX = "${flakeNix}/bin/nix";
+  env.TIMBER_FLAKE_INPUTS = builtins.toJSON (import ./nix/inputs.nix { }).paths;
 
   # The tools layer's tests run the pinned sluice, ssh-keygen, registries and
   # attic by these paths: in a moon task, moon's Rust toolchain puts cargo's

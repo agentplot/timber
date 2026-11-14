@@ -13,7 +13,7 @@ last stage delivers.
 
 ## 1. The flake's checks
 
-- [ ] 1.1 Give the flake its checks' tools, inputs and project, as the design's Decisions 1 and 8 and Task note 1.1 say. `flake.nix` gives aarch64-darwin, aarch64-linux and x86_64-linux and takes nix-darwin as the tests' input, and `flake.lock` locks it. `nix/inputs.nix` is sluice's at 7ce112b4. `devenv.nix` pins statix and nix by version, statix on `PATH` and nix by `TIMBER_FLAKE_NIX`, and sets `TIMBER_FLAKE_INPUTS`. `nix/moon.yml` holds the project `nix` with its `lint` task, and `.moon/workspace.yml` lists it (host-bindings-module spec, "The flake gives three systems"). Verify with `devenv shell -- moon run nix:lint`.
+- [x] 1.1 Give the flake its checks' tools, inputs and project, as the design's Decisions 1 and 8 and Task note 1.1 say. `flake.nix` gives aarch64-darwin, aarch64-linux and x86_64-linux and takes nix-darwin as the tests' input, and `flake.lock` locks it. `nix/inputs.nix` is sluice's at 7ce112b4. `devenv.nix` pins statix and nix by version, statix on `PATH` and nix by `TIMBER_FLAKE_NIX`, and sets `TIMBER_FLAKE_INPUTS`. `nix/moon.yml` holds the project `nix` with its `lint` task, and `.moon/workspace.yml` lists it (host-bindings-module spec, "The flake gives three systems"). Verify with `devenv shell -- moon run nix:lint`.
 - [ ] 1.2 Add the type check and the test's frame, as Decision 8 and Task note 1.2 say: `nix/check.sh`, `nix/tests/default.nix`, `nix/tests/lib.nix`, and `nix/tests/typecheck.nix` with the spec's "Every system's package"; `nix/moon.yml` gains `typecheck` and `test`. Verify with `devenv shell -- moon run nix:typecheck`.
 
 ## 2. The module's settings and file
