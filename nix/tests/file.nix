@@ -4,8 +4,9 @@
 # as its header; a key the module does not declare is written as given; a
 # value the file cannot hold fails, naming its option; and a signing key
 # or a credential in the store, holding a secret's text or given as a Nix
-# path fails evaluation, naming its option. boomdrivedev/sluice's
-# nix/tests/file.nix at 7ce112b4, for timber's file.
+# path fails evaluation, naming its option and saying the store is read
+# by every user. boomdrivedev/sluice's nix/tests/file.nix at 7ce112b4, for
+# timber's file.
 t:
 let
   inherit (t) lib;
@@ -79,18 +80,14 @@ let
     credentials.dash0 = "auth_0123456789abcdef";
   };
 
-  # A Nix path value, a file that is there, so that the option's type
-  # alone can refuse it.
-  keyPath = builtins.tryEval (
-    builtins.seq (evaluated { signing.key = ./settings.nix; }).services.timber.settings.signing.key true
-  );
-  credentialPath = builtins.tryEval (
-    builtins.seq
-      (evaluated {
-        credentials.dash0 = ./settings.nix;
-      }).services.timber.settings.credentials.dash0
-      true
-  );
+  # A Nix path value, a file that is there, which a string would copy into
+  # the store.
+  keyPath = {
+    signing.key = ./settings.nix;
+  };
+  credentialPath = {
+    credentials.dash0 = ./settings.nix;
+  };
 
   refused =
     given: option: words:
@@ -159,11 +156,15 @@ in
     "Nix store, which every user reads"
   ];
 
-  "A key given as a Nix path" = t.expect (
-    !keyPath.success
-  ) "services.timber.settings.signing.key evaluates as the Nix path ./settings.nix";
+  "A key given as a Nix path" = refused keyPath "services.timber.settings.signing.key" [
+    "is a Nix path value"
+    "Nix store, which every user reads"
+  ];
 
-  "A credential given as a Nix path" = t.expect (
-    !credentialPath.success
-  ) "services.timber.settings.credentials.dash0 evaluates as the Nix path ./settings.nix";
+  "A credential given as a Nix path" =
+    refused credentialPath "services.timber.settings.credentials.dash0"
+      [
+        "is a Nix path value"
+        "Nix store, which every user reads"
+      ];
 }

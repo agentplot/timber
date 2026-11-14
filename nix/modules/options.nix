@@ -11,10 +11,11 @@
 # profile, that `kms` stands alone, and every given binding are timber's,
 # refused or given at its read, naming the table. A signing key and a
 # credential are named by their paths outside the store, since the file is
-# in the store, which every user reads: one in the store, or one that is
-# no path, fails evaluation, and the module reads and copies neither (45,
-# 64, 118; record 0033; core.21). boomdrivedev/sluice's
-# nix/modules/options.nix at 7ce112b4, for timber's file.
+# in the store, which every user reads: one in the store, one that is no
+# path, or a Nix path value, fails evaluation saying so, and the module
+# reads and copies neither (45, 64, 118; record 0033; core.21).
+# boomdrivedev/sluice's nix/modules/options.nix at 7ce112b4, for timber's
+# file.
 { packages }:
 {
   config,
@@ -62,20 +63,44 @@ let
     else
       value;
 
+  # A path on the host, written as a string. The type also takes a Nix
+  # path value, so that `outside` refuses it saying the store is read by
+  # every user, which a type's own failure, "is not of type", would not
+  # say; it is never written, and the renderer refuses one, naming its
+  # key, without copying it.
+  onHost = lib.mkOptionType {
+    name = "pathOnHost";
+    description = "string, a path on the host";
+    descriptionClass = "noun";
+    check = value: builtins.isString value || builtins.isPath value;
+    merge = lib.options.mergeEqualOption;
+  };
+
   # A path's failures: none where it is unset, or a path, `/…` or `~/…`,
-  # outside the store.
+  # outside the store. A Nix path value is told apart before anything
+  # reads it as a string, which would copy its file into the store.
   outside =
     option: put: path:
-    lib.optionals (path != null) [
-      {
-        assertion = lib.hasPrefix "/" path || lib.hasPrefix "~/" path;
-        message = "${option} is no path, /… or ~/…, and the file that names it is in the Nix store, which every user reads: ${put}";
-      }
-      {
-        assertion = !lib.hasPrefix (builtins.storeDir + "/") path;
-        message = "${option} is in the Nix store, which every user reads: ${put}";
-      }
-    ];
+    if path == null then
+      [ ]
+    else if builtins.isPath path then
+      [
+        {
+          assertion = false;
+          message = "${option} is a Nix path value, which would copy its file into the Nix store, which every user reads: ${put}";
+        }
+      ]
+    else
+      [
+        {
+          assertion = lib.hasPrefix "/" path || lib.hasPrefix "~/" path;
+          message = "${option} is no path, /… or ~/…, and the file that names it is in the Nix store, which every user reads: ${put}";
+        }
+        {
+          assertion = !lib.hasPrefix (builtins.storeDir + "/") path;
+          message = "${option} is in the Nix store, which every user reads: ${put}";
+        }
+      ];
   key = if cfg.settings.signing == null then null else cfg.settings.signing.key;
   keyOutside =
     outside "services.timber.settings.signing.key"
@@ -139,7 +164,7 @@ in
           unset
             (table {
               signer = unset types.str "The name the host signs as, beside `key` (C.8).";
-              key = unset types.str "The path of the signer's SSH private key on this host, absolute or under `~/`, outside the Nix store, which every user reads (C.8).";
+              key = unset onHost "The path of the signer's SSH private key on this host, absolute or under `~/`, outside the Nix store, which every user reads (C.8).";
               kms = unset types.str "A key in AWS KMS by its key ARN, alone in the table: the signer's name is the ARN. The credential is the host's AWS chain, found at each signature and kept nowhere (C.7, 64).";
             })
             "`[signing]`: the host's signer, `signer` and its `key`, or a key in AWS KMS, `kms`, alone. Where unset, for a publish, a promote or an apply, the host key at `timber/host/signing.key` under the user's data directory, made by the first claim it signs (118, C.8).";
@@ -153,7 +178,7 @@ in
             })
             "`[gate]`: what tells the host's gate of a version a publish offered, by one key, `publish` or `job`. Where unset, the host's own publish (118, 130, C.16).";
         trust = unset (types.attrsOf (types.attrsOf types.str)) "`[trust.<signer>]`: each signer the host trusts, by its name, a table of the one key its profile verifies it by, such as `ssh`, a public key and never a credential (118, C.10). Where unset, the host trusts its own signer alone.";
-        credentials = unset (types.attrsOf types.str) "`[credentials]`: each credential by its name, as an environment's target table names it, the path of a file on the host that holds that credential alone, absolute or under `~/`, outside the Nix store, which every user reads. timber hands the path to the target's own tool, which alone reads it; the module reads and copies no credential (118; record 0033). Where unset, the host names no credential.";
+        credentials = unset (types.attrsOf onHost) "`[credentials]`: each credential by its name, as an environment's target table names it, the path of a file on the host that holds that credential alone, absolute or under `~/`, outside the Nix store, which every user reads. timber hands the path to the target's own tool, which alone reads it; the module reads and copies no credential (118; record 0033). Where unset, the host names no credential.";
       };
       default = { };
       description = "The host's bindings, `~/.config/timber/config.toml`, each table and key named as the file names it, rendered at evaluation. A table or key left unset is left out of the file, so the given binding holds (118); a table set empty, such as `landing.branch = { }`, is written, since it binds its profile; a key the module does not declare is written as given, for timber to judge. The file is in the Nix store, which every user reads: a signing key and a credential are named by their paths on the host, never held here.";
