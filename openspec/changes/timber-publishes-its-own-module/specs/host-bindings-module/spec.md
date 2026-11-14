@@ -221,16 +221,16 @@ record 0033; rules core.21, core.76).
 - **WHEN** the module is enabled with `settings.signing.key` a Nix path
   value
 - **THEN** evaluation fails, naming
-  `services.timber.settings.signing.key` ("A key given as a Nix path" in
-  `nix/tests/file.nix`)
+  `services.timber.settings.signing.key` and the store ("A key given as
+  a Nix path" in `nix/tests/file.nix`)
 
 #### Scenario: A credential given as a Nix path
 
 - **WHEN** the module is enabled with `settings.credentials.dash0` a Nix
   path value
 - **THEN** evaluation fails, naming
-  `services.timber.settings.credentials.dash0` ("A credential given as a
-  Nix path" in `nix/tests/file.nix`)
+  `services.timber.settings.credentials.dash0` and the store ("A
+  credential given as a Nix path" in `nix/tests/file.nix`)
 
 ### Requirement: The file is linked at timber's path for the user who runs timber
 

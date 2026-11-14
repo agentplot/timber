@@ -129,14 +129,15 @@ rejects as its option 3.
     `types.str`.
   - `ledger`: `git_ref`, a table holding `remote`, `types.str`; `store`,
     a table declaring nothing.
-  - `signing`: `signer`, `key` and `kms`, `types.str`.
+  - `signing`: `signer` and `kms`, `types.str`; `key`, a path on the
+    host (Decision 4).
   - `gate`: `publish`, a table declaring nothing; `job`, `types.str`.
   - `trust`: `types.nullOr (types.attrsOf (types.attrsOf types.str))`,
     each signer by its name, a table of the one key its profile
     verifies it by.
-  - `credentials`: `types.nullOr (types.attrsOf types.str)`, each
-    credential by its name, the path of the file that holds it,
-    absolute or under `~/`.
+  - `credentials`: `types.nullOr (types.attrsOf <a path on the host>)`,
+    each credential by its name, the path of the file that holds it,
+    absolute or under `~/` (Decision 4).
 
   Each description says what the key binds, what holds where the table
   is unset, and the clause it rests on, in the self-hosting guide's
@@ -203,8 +204,15 @@ every user reads: put the credential in a file on the host, readable by
 the user who runs timber alone, by hand or by the host's handling of
 secrets, and name its path (118)`. A value that is no path gets the same
 message with "is no path, /… or ~/…", since a value that is no path may
-be the secret's own text. A Nix path value, `./dash0-token`, fails
-`types.str` before anything copies it.
+be the secret's own text. A Nix path value, `./dash0-token`, would copy
+its file into the store wherever it is read as a string, so `key` and
+each credential are of a type of `options.nix`'s own, a path on the
+host, which takes a string or a Nix path value, and a Nix path value
+fails by its own message, told apart before anything reads it as a
+string: `services.timber.settings.credentials.dash0 is a Nix path value,
+which would copy its file into the Nix store, which every user reads:`
+and the same advice. The renderer, which takes no path, refuses one
+naming its key without copying it.
 
 The module names the path and never reads, copies or checks the file:
 the file is the host's, made by its handling of secrets, agenix's or
@@ -220,7 +228,9 @@ secret's text or lies in the store, so it holds no rule of the reader's
 twice (Decision 2); Boomdrive's
 refusal of every key named `key`, `token`, `secret` or `password`, which
 would refuse timber's own `key` path; a secrets integration of the
-module's own.
+module's own; `types.str` refusing a Nix path value, whose failure, "is
+not of type `null or string`", names the option and says nothing of the
+store.
 
 ### 5. The file is rendered at evaluation
 
@@ -567,11 +577,10 @@ cases are the spec's: "No settings", "A laptop's file", "A fleet's
 file", "A host's credentials", "A table set empty", "A key the module
 does not declare",
 "A value the file cannot hold" (`builtins.tryEval` of the text and the
-failure's words), "A signing key in the store", "A signing key's text",
-"A credential in the store" and "A credential's text" (by the
-assertions' messages), "A key given as a Nix path"
-and "A credential given as a Nix path" (`tryEval` of the option's
-value). `nix/tests/default.nix` takes `file.nix` into `test`.
+failure's words), and "A signing key in the store", "A signing key's
+text", "A credential in the store", "A credential's text", "A key given
+as a Nix path" and "A credential given as a Nix path" (by the
+assertions' messages). `nix/tests/default.nix` takes `file.nix` into `test`.
 `treefmt.nix`: Decision 8's exclude.
 
 **2.2** `crates/timber/src/bindings/tests.rs`:
