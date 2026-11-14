@@ -1,3 +1,13 @@
+## Purpose
+
+The target profile bound as `dash0` (B.7, C.12): one dataset of Dash0
+converged on the dashboards an environment's version holds, each by its
+fixed identifier, with Dash0's own CLI from the host that holds the
+dataset's write token, the token handed by its path; every dashboard an
+earlier version applied that this one does not hold removed, and none
+timber did not apply; and what timber applied recorded in a marker
+dashboard in the dataset, which current and report read.
+
 ## ADDED Requirements
 
 ### Requirement: The Dash0 target is a target profile of its own

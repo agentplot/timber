@@ -38,7 +38,7 @@ each task's check is its own.
 
 ## 6. The specs
 
-- [ ] 6.1 Validate and archive the change, so `openspec/specs/` gains `dash0-target` and its deltas to `host-bindings` and `conformance-suite`. Run `devenv shell -- openspec validate timber-deploys-a-datasets-dash0-dashboards --strict`, then `devenv shell -- openspec archive timber-deploys-a-datasets-dash0-dashboards --yes`. Verify with `devenv shell -- openspec validate dash0-target --type spec --strict`.
+- [x] 6.1 Validate and archive the change, so `openspec/specs/` gains `dash0-target` and its deltas to `host-bindings` and `conformance-suite`. Run `devenv shell -- openspec validate timber-deploys-a-datasets-dash0-dashboards --strict`, then `devenv shell -- openspec archive timber-deploys-a-datasets-dash0-dashboards --yes`. Verify with `devenv shell -- openspec validate dash0-target --type spec --strict`.
 
 ## Workflow follow-up
 
