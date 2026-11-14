@@ -2,6 +2,7 @@
   pkgs,
   lib,
   config,
+  inputs,
   ...
 }:
 
@@ -250,6 +251,15 @@ let
     }
   );
 
+  # Dash0's CLI at the release the Dash0 target's proof by hand
+  # (crates/timber/tests/dash0.rs, `check-dash0`) runs, from Dash0's own
+  # flake at its tag (devenv.yaml). The proof runs it by
+  # TIMBER_TOOLS_DASH0_CLI, since on deneb the `dash0` on a person's path is
+  # swancloud's wrapper, which hands its read-only token. timber itself runs
+  # the `dash0` on PATH, which where a host runs `timber apply` in a
+  # dashboards repository's shell is that repository's own pin.
+  dash0 = inputs.dash0-cli.packages.${pkgs.stdenv.hostPlatform.system}.dash0;
+
   # devenv's own script that makes the files it declares, Claude Code's
   # among them, run from the repository's root.
   writeFiles = ''
@@ -405,6 +415,8 @@ in
     # devenv runs on.
     pkgs.attic-client
     pkgs.attic-server
+    # The Dash0 target's proof by hand (crates/timber/tests/dash0.rs).
+    dash0
     # The Claude Code plugin's checks (plugins/claude.sh).
     claude
     # The changes and specs, and the skills and commands it writes under
@@ -438,6 +450,9 @@ in
   env.TIMBER_TOOLS_ATTIC = "${pkgs.attic-client}/bin/attic";
   env.TIMBER_TOOLS_ATTICD = "${pkgs.attic-server}/bin/atticd";
   env.TIMBER_TOOLS_ATTICADM = "${pkgs.attic-server}/bin/atticadm";
+  # The Dash0 target's proof by hand runs this CLI, never the `dash0` on a
+  # person's path, which on deneb is swancloud's wrapper.
+  env.TIMBER_TOOLS_DASH0_CLI = "${dash0}/bin/dash0";
 
   # Claude Code's project files (ADR 0030, after agentplot/boomdrive's
   # record 0022): .mcp.json from the servers below and

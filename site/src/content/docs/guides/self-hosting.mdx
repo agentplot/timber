@@ -56,8 +56,9 @@ The operator's bindings for a host are one file,
 is set, beside sluice's own `config.toml` and in the same form, readable
 with any file reader (118). A host needs none: the file is for pointing
 a host at a registry, a key service or a shared ledger. It names the
-store, the landing, the ledger, the signer and what tells the gate, and
-nothing the repository binds (92):
+store, the landing, the ledger, the signer, what tells the gate and the
+credentials a target's tool reads, and nothing the repository binds
+(92):
 
 ```toml
 [store]
@@ -81,6 +82,9 @@ key = "~/.config/timber/signing"
 [gate]                            # what tells the gate, C.16
 publish = {}                      # also with no [gate], 118
                                  # or: job = "<the job's words>"
+
+[credentials]                     # each a file holding only that credential, 118
+dash0-dashboards = "~/.local/share/secrets/dash0-dashboards"
 ```
 
 With no file, and for each table a file leaves out, the host is bound
@@ -109,6 +113,8 @@ to the given ones (118):
   command signs nothing.
 - **What tells the gate**: the host's own publish, as `[gate] publish =
   {}` binds it (130).
+- **The credentials**: none, so an environment whose target names a
+  credential is unreadable, naming it and the file.
 
 A file that names a table binds exactly what it names, and leaves the
 rest given: `[store] registry` alone writes into that registry and keeps
@@ -184,6 +190,15 @@ empty file is no file.
   words. A file with no `[gate]` binds `publish`, the host's default
   (118), so a host whose gate is elsewhere names its `job`. A `[gate]`
   naming no key, two, or another is refused, naming it.
+- `[credentials]` names each credential a target's own tool reads, by
+  the name an environment's target table gives it, as the path of a file
+  holding only that credential, absolute or beginning `~/` (118). The
+  file never holds a credential, and timber never opens the file a path
+  names: it hands the path to the target, which hands it to its tool,
+  as the [Dash0 target](/timber/guides/integrations/targets/#dash0s-dashboards)
+  hands Dash0's CLI its token (64). A value that is no string, or a path
+  of neither form, is unreadable naming the file and `[credentials]
+  <name>`, never the value, and binds nothing in its place.
 - The build and the projections are the repository's to bind, not the
   host's: moon is the build, and the policy file names each output's task
   and the projection that packs it. A `[build]` or `[projections]` table
