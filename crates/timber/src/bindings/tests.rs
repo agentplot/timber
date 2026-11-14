@@ -145,6 +145,81 @@ fn each_table_is_read() {
     );
 }
 
+/// The files timber's flake module renders for a laptop and for a fleet
+/// (nix/tests/files, which the flake's cases hold the module's text to
+/// byte for byte), read as a host's bindings file: every table the module
+/// names is one the reader binds, as the settings name it (118; record
+/// 0035).
+#[test]
+fn the_modules_files_are_read_as_written() {
+    let host = Host::new();
+    host.write(include_str!("../../../../nix/tests/files/laptop.toml"));
+    let laptop = host.read().unwrap();
+    let store = laptop.store.unwrap();
+    assert_eq!(store.key(), "layout");
+    assert_eq!(
+        store.path(),
+        Ok(host.home().join(".local/share/timber/layout"))
+    );
+    let landing = laptop.landing.unwrap();
+    assert_eq!(landing.key(), "branch");
+    assert_eq!(landing.options::<Remote>(), Ok(Remote { remote: None }));
+    let ledger = laptop.ledger.unwrap();
+    assert_eq!(ledger.key(), "git_ref");
+    assert_eq!(
+        ledger.options::<Remote>(),
+        Ok(Remote {
+            remote: Some("origin".into())
+        })
+    );
+    assert_eq!(
+        laptop.signing,
+        Some(Signing::HostKey {
+            signer: SignerId::new("host-a"),
+            key: host.home().join(".config/timber/signing"),
+        })
+    );
+    assert_eq!(Teller::of(laptop.gate.as_ref()), Ok(Teller::Publish));
+    assert!(laptop.gate.is_some(), "the laptop's [gate] read as absent");
+    assert_eq!(
+        laptop.trust,
+        [NamedSigner {
+            id: SignerId::new("host-b"),
+            verified_by: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGt host-b".into(),
+            kinds: vec![],
+            checks: vec![],
+        }]
+    );
+
+    host.write(include_str!("../../../../nix/tests/files/fleet.toml"));
+    let fleet = host.read().unwrap();
+    let store = fleet.store.unwrap();
+    assert_eq!(store.key(), "registry");
+    assert_eq!(store.value().as_str(), Some("registry.example.com/timber"));
+    let landing = fleet.landing.unwrap();
+    assert_eq!(landing.key(), "sluice");
+    assert_eq!(
+        landing.options::<Remote>(),
+        Ok(Remote {
+            remote: Some("origin".into())
+        })
+    );
+    let ledger = fleet.ledger.unwrap();
+    assert_eq!(ledger.key(), "store");
+    assert_eq!(ledger.value().as_table().map(|t| t.is_empty()), Some(true));
+    assert_eq!(
+        fleet.signing,
+        Some(Signing::Kms(
+            profiles::signer::kms::KeyArn::parse(ARN).unwrap()
+        ))
+    );
+    assert_eq!(
+        Teller::of(fleet.gate.as_ref()),
+        Ok(Teller::Job("the release job a push to main wakes".into()))
+    );
+    assert_eq!(fleet.trust, []);
+}
+
 #[test]
 fn a_key_under_the_home_is_expanded_and_tables_left_out_are_none() {
     let host = Host::new();

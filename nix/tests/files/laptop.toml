@@ -1,0 +1,18 @@
+# Written by timber's flake module from services.timber.settings; a change goes there.
+
+[gate.publish]
+
+[landing.branch]
+
+[ledger.git_ref]
+remote = "origin"
+
+[signing]
+key = "~/.config/timber/signing"
+signer = "host-a"
+
+[store]
+layout = "~/.local/share/timber/layout"
+
+[trust.host-b]
+ssh = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGt host-b"

@@ -5,10 +5,12 @@ dependsOn: [seams, core, fakes, conformance]
 
 tasks:
   # The crate's tests over the fakes and git alone, herdr_documents among
-  # them, which compares the herdr plugin's documents with the binary's.
+  # them, which compares the herdr plugin's documents with the binary's,
+  # and the bindings reader's test of the files the flake's module renders
+  # (record 0035).
   test:
     command: 'cargo test -p timber'
-    inputs: ['/crates/timber/**/*', '/crates/timber-seams/**/*', '/crates/timber-core/**/*', '/crates/timber-fakes/**/*', '/crates/timber-conformance/**/*', '/Cargo.toml', '/Cargo.lock', '/devenv.nix', '/devenv.lock', '/plugins/herdr/tests/docs/**/*']
+    inputs: ['/crates/timber/**/*', '/crates/timber-seams/**/*', '/crates/timber-core/**/*', '/crates/timber-fakes/**/*', '/crates/timber-conformance/**/*', '/Cargo.toml', '/Cargo.lock', '/devenv.nix', '/devenv.lock', '/plugins/herdr/tests/docs/**/*', '/nix/tests/files/**/*']
     tags: [cargo-test, check-fast]
     options: {runFromWorkspaceRoot: true}
   # The profiles' tests that run moon, sluice and ssh-keygen against

@@ -63,6 +63,9 @@ account.
 Beside the command line, a Claude Code plugin refuses an ecosystem's
 own publish command in a timber repository and names `timber publish`,
 and a herdr pane shows every repository the host knows.
+On nix-darwin and NixOS, the flake's module `services.timber` writes the
+host's bindings file from options named as the file names them, and
+installs timber.
 
 One store at three levels of trust: a cache hit says someone built it, an
 artifact says the merge queue built and signed it, and a release says it
@@ -88,6 +91,7 @@ neither of them knows timber exists.
 |---|---|
 | `crates/` | timber's five crates: the command line, the core, the seams, the fakes and the conformance suite |
 | `plugins/` | the Claude Code plugin and the herdr pane |
+| `nix/` | the flake's `services.timber` modules for nix-darwin and NixOS, and their checks, evaluated against no store |
 | `openspec/specs/` | what each built part must do, changed only through an OpenSpec change |
 | `site/` | the site, Astro with Starlight (`site/README.md`) |
 | `docs/architecture/core.md` | the rules every change here holds to |
