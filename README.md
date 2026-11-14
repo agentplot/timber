@@ -1,10 +1,13 @@
 # timber
 
-**Designed; the scaffold is built and nothing of the design yet.** The
-design is settled in
+**Phase 1 is built: v0.6.0 holds its six bolts.** It publishes a
+landing as a signed version in a store you own, replays what the
+landing's checks built from the same store, accepts and promotes
+through a gate and a signed ledger, serves npm and Cargo from it under a
+policy, and pushes a version to a Nix fleet. The design is settled in
 [boomdrivedev/blueprints](https://github.com/boomdrivedev/blueprints); the
 [roadmap](https://boomdrivedev.github.io/timber/roadmap/) says what each
-bolt delivers.
+bolt delivered and what phases 2 and 3 add.
 
 **Build once, sign everything, promote with proof, in your own account.**
 
@@ -22,33 +25,44 @@ account.
 - **The site:** https://boomdrivedev.github.io/timber
 - **The design book:** https://boomdrivedev.github.io/blueprints/timber/
 - **The statement**, timber's invariants as numbered clauses, is
-  `design/timber/requirements.md` in boomdrivedev/blueprints, being
-  written now.
+  `design/timber/requirements.md` in boomdrivedev/blueprints.
 
 ## What it does
 
-- **push.** Packages what the build left, signs it, and pushes it to the
-  registry by digest, into quarantine, with a machine-readable result
-  that names the digest, the version and the attestations.
-- **attest.** Attaches a signed statement to an artifact's digest as an
-  OCI referrer: the fleet's or the host's build provenance, sluice's
-  verdicts for the commit, a test run, a review.
-- **publish.** Carries a verified artifact from quarantine into the
-  artifact store by copying its digest, and points the `beta` channel at
-  the version the landing made.
-- **verify.** Checks an artifact's signatures and attestations against a
-  policy and says which clauses it satisfies, without touching the store.
-- **sync.** Fills each ecosystem's own local layout, npm, Maven, PyPI,
-  Go, Cargo, NuGet, container images, CloudFormation templates and site
-  bundles, from the store under a policy: a version is served only when
-  its attestations satisfy it.
-- **serve.** A localhost server speaking the read protocol of the
-  ecosystems that need HTTP, npm first, over the same policy.
-- **promote.** Moves a channel such as `stable` to a version by a signed
-  promotion record in an append-only ledger; a rollback is a promotion to
-  an older version.
-- **status.** Says what each channel points at, what each environment
-  runs, and what is waiting on a promotion.
+- **publish.** Offers a landed revision's outputs as a version of each
+  component it publishes: the version derived from history and claimed
+  before anything is packed, each artifact with its provenance beside
+  it, the index last, and the host's gate told where its bindings name
+  one. Where the landing has verdicts it builds nothing: a host that
+  holds none of the outputs offers the cache entries they name.
+- **verify.** Says which signer the policy names made each claim on a
+  version, and whether each counts.
+- **push.** Writes the cache entries a landing's build left on this
+  host to the store after the landing; with `--left`, those a check
+  job's run left, before it.
+- **sync.** Renders into a checkout the cache entries a landed
+  revision's verdicts name, where moon reads them, and each layout of
+  the versions its lockfiles pin that the policy admits, refusing the
+  rest with the reason.
+- **serve.** The host's one serving process, at one fixed address: npm
+  and Cargo read the checkout's layouts from it, and every repository
+  the host knows is a page with its JSON beside it.
+- **promote.** Moves a channel such as `stable` to a version by a
+  signed claim appended to a chain held in a git ref or in the store; a
+  rollback is a promotion back.
+- **apply.** Converges one environment on its channel's head, the
+  claims the channel's policy requires judged first: a Nix binary cache
+  through attic, or one machine of a clan fleet, whose report is a
+  claim beside the version.
+- **status.** Where each channel is and the chain that put it there,
+  and what each environment runs and should run, read on any machine.
+- **policy.** The policy in force at the branch's landed head.
+- **rebuild.** Makes the host's record of what it published again from
+  the store and git.
+
+Beside the command line, a Claude Code plugin refuses an ecosystem's
+own publish command in a timber repository and names `timber publish`,
+and a herdr pane shows every repository the host knows.
 
 One store at three levels of trust: a cache hit says someone built it, an
 artifact says the merge queue built and signed it, and a release says it
@@ -57,8 +71,7 @@ reconciler converges them, push or pull. Trust is centralized only as a
 thin layer of identity, policy and a signed ledger; execution stays on
 the machines the agents run on.
 
-The givens name Rust as its language, as sluice's. The first crate comes
-with the first ADR.
+timber is written in Rust, as sluice is.
 
 timber is one of a family: headwater reports releases, eddy lists
 meetings, millpond keeps the inbox, flume launches the work, sounding
@@ -73,6 +86,9 @@ neither of them knows timber exists.
 
 | path | what |
 |---|---|
+| `crates/` | timber's five crates: the command line, the core, the seams, the fakes and the conformance suite |
+| `plugins/` | the Claude Code plugin and the herdr pane |
+| `openspec/specs/` | what each built part must do, changed only through an OpenSpec change |
 | `site/` | the site, Astro with Starlight (`site/README.md`) |
 | `docs/architecture/core.md` | the rules every change here holds to |
 | `docs/adr/` | the decisions behind the rules, one record each |
