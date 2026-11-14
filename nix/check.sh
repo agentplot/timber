@@ -6,8 +6,9 @@
 # devenv shell fetched them (TIMBER_FLAKE_INPUTS) as plain files, and
 # needs neither the network nor the nix daemon, which the gate's sandbox
 # denies. Its configuration, caches and state are a scratch folder's,
-# never the host's or the home's. Each failure is one line,
-# nix: <case>: <what>. boomdrivedev/sluice's nix/check.sh at 7ce112b4, for
+# never the host's or the home's. The test also runs the activation's
+# cases, nix/tests/activate.sh, by sh in scratch folders. Each failure is
+# one line, nix: <case>: <what>. boomdrivedev/sluice's nix/check.sh at 7ce112b4, for
 # timber's inputs, nix and store; timber's version is the tree's, which
 # root:release holds (record 0031), so it sets no version of its own.
 set -eu
@@ -46,6 +47,10 @@ failures=$("$TIMBER_FLAKE_NIX" eval --raw --offline --read-only --impure \
   --store 'dummy://?store=/timber-check/store' \
   --extra-experimental-features nix-command \
   --file nix/tests "$check")
+if [ "$check" = test ]; then
+  activation=$(sh nix/tests/activate.sh)
+  failures=$(printf '%s\n%s\n' "$failures" "$activation" | sed '/^$/d')
+fi
 
 if [ -n "$failures" ]; then
   printf '%s\n' "$failures"
