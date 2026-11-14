@@ -3383,7 +3383,7 @@ dependencies = [
 
 [[package]]
 name = "timber"
-version = "0.0.0"
+version = "0.7.0"
 dependencies = [
  "anyhow",
  "aws-config",
@@ -3419,7 +3419,7 @@ dependencies = [
 
 [[package]]
 name = "timber-conformance"
-version = "0.0.0"
+version = "0.7.0"
 dependencies = [
  "anyhow",
  "serde_json",
@@ -3431,7 +3431,7 @@ dependencies = [
 
 [[package]]
 name = "timber-core"
-version = "0.0.0"
+version = "0.7.0"
 dependencies = [
  "anyhow",
  "git-cliff-core",
@@ -3449,7 +3449,7 @@ dependencies = [
 
 [[package]]
 name = "timber-fakes"
-version = "0.0.0"
+version = "0.7.0"
 dependencies = [
  "semver",
  "serde",
@@ -3459,7 +3459,7 @@ dependencies = [
 
 [[package]]
 name = "timber-seams"
-version = "0.0.0"
+version = "0.7.0"
 dependencies = [
  "base64 0.22.1",
  "serde",
