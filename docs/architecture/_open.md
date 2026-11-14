@@ -11,6 +11,7 @@ Deleted when empty.
 - **C.13, "no device that asks for a promotion commits anything".** Holds because the asking host is the gate (108); an asker that is not the gate is not built.
 - **141 and section 9, the catalogued kinds.** Built: every kind of claim takes a predicate type of timber's own under `https://agentplot.github.io/timber/claim/` (`crates/timber-seams/src/claim.rs`); a provenance is to take SLSA's Provenance, an acceptance and a rebuild SLSA's Verification Summary Attestation, and a test in-toto's Test Result (ADR 0022, core.57). Unit `every-claim-takes-the-catalogued-kind-that-carries-it`.
 - **135, a publish never builds to offer where the landing has verdicts.** Built: publish asks the build seam to ensure every output whatever the landing carries (`crates/timber-core/src/publish.rs`), so where the landing has verdicts an output whose cache entry is gone is built before the publish refuses it naming the output, where 135 builds nothing (core.10, core.30). Unit `a-publish-with-verdicts-builds-nothing`.
+- **144, every publish has a link.** Built: a publish signs each output's provenance and the publisher's layout policy about its index (`crates/timber-core/src/publish.rs`), and no link naming the index and its landing by the landed revision and the digest of each signed verdict the landing recorded. A link takes the form the family's tools share (weir 114), which weir's statement spells in no form yet. No unit carves it; the register names phase 2 until the planner names the unit.
 
 ## Decisions waiting
 

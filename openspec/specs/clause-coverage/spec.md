@@ -18,7 +18,7 @@ adopts it.
 #### Scenario: The clauses listed
 
 - **WHEN** the suite's list of clauses is read
-- **THEN** it holds every number from 1 to 143 exactly once, each under its section of Part A or Part B as boomdrivedev/blueprints 90cf023 places it, 141, 142 and 143 after 13 in A.2, and names that revision as the one it was read at
+- **THEN** it holds every number from 1 to 144 exactly once, each under its section of Part A or Part B as boomdrivedev/blueprints a8234b3 places it, 141, 142 and 143 after 13 in A.2 and 144 after 20 in A.3, and names that revision as the one it was read at
 
 ### Requirement: A clause cited by nothing fails the suite
 
@@ -136,3 +136,14 @@ core.33, section 12).
 
 - **WHEN** the coverage check runs after the commit that adopts boomdrivedev/blueprints 90cf023
 - **THEN** 141 is pending with its unit, 142 and 143 are pending with phase 2, each with its reason, and the check passes
+
+### Requirement: The clause the statement added at 144 waits named
+
+While no scenario cites 144, it SHALL be named in the register from
+the commit that adopts the statement holding it, with phase 2's link of
+a publish and its reason (rule core.33, section 12).
+
+#### Scenario: The register after a8234b3 is adopted
+
+- **WHEN** the coverage check runs after the commit that adopts boomdrivedev/blueprints a8234b3
+- **THEN** 144 is pending with phase 2's link of a publish and its reason, 141 to 143 are pending as before, and the check passes
