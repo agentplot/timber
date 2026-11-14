@@ -34,6 +34,9 @@ _: {
     "plugins/herdr/lib/*.jq"
     # The herdr plugin's documents and frames, compared byte for byte.
     "plugins/herdr/tests/docs/**"
+    # The module's rendered files, compared byte for byte by the flake's
+    # cases; taplo would rewrite them (record 0035).
+    "nix/tests/files/**"
   ];
 
   programs.rustfmt.enable = true;
