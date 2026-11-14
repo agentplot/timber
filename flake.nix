@@ -55,8 +55,6 @@
       rustVersion = (builtins.fromTOML (builtins.readFile ./.prototools)).rust;
       workspace = (builtins.fromTOML (builtins.readFile ./Cargo.toml)).workspace.package;
       revision = self.rev or self.dirtyRev or "unknown";
-    in
-    {
       packages = forAll (
         pkgs:
         let
@@ -88,5 +86,25 @@
           };
         }
       );
+
+      # A module of a platform, keyed as sluice's and Flume's flakes key
+      # their own, so a configuration that imports it twice, directly and
+      # through Boomdrive's flake, declares services.timber once (record
+      # 0035).
+      moduleOf = platform: file: {
+        _file = file;
+        key = "github:boomdrivedev/timber#${platform}Modules.timber";
+        imports = [ (import file { inherit packages; }) ];
+      };
+    in
+    {
+      inherit packages;
+
+      # services.timber, the host's bindings file and the package (record
+      # 0035, core.76).
+      darwinModules = rec {
+        timber = moduleOf "darwin" ./nix/modules/darwin.nix;
+        default = timber;
+      };
     };
 }

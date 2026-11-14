@@ -24,4 +24,10 @@ in
     ++ lib.concatMap (
       system: if outputs.packages ? ${system} then evaluates system else [ "packages gives no ${system}" ]
     ) systems;
+
+  # The nix-darwin module in a minimal system of its platform, whose
+  # derivation throws on a failed assertion.
+  "The nix-darwin module" =
+    t.expect (builtins.tryEval (t.darwinSystem { }).system.drvPath).success
+      "a nix-darwin system with services.timber enabled does not evaluate";
 }

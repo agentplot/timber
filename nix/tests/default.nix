@@ -26,5 +26,8 @@ let
 in
 {
   typecheck = lines [ ./typecheck.nix ];
-  test = lines [ ./file.nix ];
+  test = lines [
+    ./file.nix
+    ./darwin.nix
+  ];
 }
