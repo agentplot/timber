@@ -27,6 +27,9 @@
 //!
 //! [trust.gate]
 //! ssh = "ssh-ed25519 AAAA… gate@box"
+//!
+//! [credentials]
+//! dash0-dashboards = "~/.local/share/secrets/dash0-dashboards"
 //! ```
 //!
 //! `[store]`, `[landing]` and `[ledger]` each name their profile by their
@@ -48,13 +51,20 @@
 //! signers `[trust]` names, so a host consumes what it published itself;
 //! a consumer reads through them every claim its policy file names no
 //! signer for, and every claim where it has no policy file, what each may
-//! claim being the reader's to say (118, C.10; design D12). A path is
+//! claim being the reader's to say (118, C.10; design D12).
+//! `[credentials]` names each credential a target's own tool reads, by
+//! the name an environment's target table gives it, as the path of a
+//! file holding only that credential: the file never holds a credential,
+//! and timber never opens the file a path names, handing the path to the
+//! target, which hands it to its tool (45, 64, rule core.21; the Dash0
+//! target's design D3). A path is
 //! absolute or begins `~/`, expanded against the home directory. This
 //! module reads each table generically and names no
 //! tool or service (rule core.1): the key of each seam's table is
 //! matched to its profile by the `bind` function of that seam's profile
-//! family, and `[signing]` is read whole by the signer profiles' family,
-//! under `profiles/`.
+//! family, `[signing]` is read whole by the signer profiles' family, and
+//! `[credentials]` is handed whole to the target profiles' family, under
+//! `profiles/`.
 //!
 //! A host with no file is bound as one whose file is empty, and a table
 //! the file leaves out is bound to the binding its seam's profile family
@@ -162,8 +172,9 @@ pub fn data(xdg_data_home: Option<&OsStr>, home: Option<&Path>) -> Option<PathBu
 }
 
 /// What the bindings file names: the store's table, the landing's, the
-/// ledger's and the gate's, where it holds them, the host's signer, and
-/// the other signers it trusts, each with no claim of its own to make.
+/// ledger's and the gate's, where it holds them, the host's signer, the
+/// other signers it trusts, each with no claim of its own to make, and
+/// the credentials a target's tool reads.
 #[derive(Clone, Debug, PartialEq)]
 pub struct Bindings {
     pub file: PathBuf,
@@ -173,6 +184,28 @@ pub struct Bindings {
     pub gate: Option<Table>,
     pub signing: Option<Signing>,
     pub trust: Vec<NamedSigner>,
+    pub credentials: Credentials,
+}
+
+/// The credentials the bindings file's `[credentials]` names (118): each
+/// credential's name, as an environment's target table gives it, and the
+/// path of the file that holds only it, `~/` expanded; none where the file
+/// holds no `[credentials]`. `file` is the bindings file's path, which a
+/// target names where a table names a credential the file does not. No
+/// credential is here, and nothing opens the file a path names but the
+/// target's own tool (64, rule core.21).
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct Credentials {
+    pub file: PathBuf,
+    pub paths: BTreeMap<String, PathBuf>,
+}
+
+impl Credentials {
+    /// The path of the file holding the credential `name`, where the
+    /// bindings file names it.
+    pub fn path(&self, name: &str) -> Option<&Path> {
+        self.paths.get(name).map(PathBuf::as_path)
+    }
 }
 
 /// What tells this host's gate of a version a publish offered (95, 130,
@@ -363,6 +396,10 @@ pub fn read(file: &Path, home: Option<&Path>) -> Answer<Bindings> {
         gate: None,
         signing: None,
         trust: Vec::new(),
+        credentials: Credentials {
+            file: file.to_path_buf(),
+            paths: BTreeMap::new(),
+        },
     };
     for (name, value) in tables {
         let at = format!("[{name}]");
@@ -372,7 +409,7 @@ pub fn read(file: &Path, home: Option<&Path>) -> Answer<Bindings> {
                 Some(&name),
                 format!(
                     "{name} is not a table; the file binds [store], [landing], [ledger], \
-                     [signing], [gate] and [trust]"
+                     [signing], [gate], [trust] and [credentials]"
                 ),
             ));
         };
@@ -385,6 +422,12 @@ pub fn read(file: &Path, home: Option<&Path>) -> Answer<Bindings> {
             "trust" => {
                 for (id, value) in table {
                     bindings.trust.push(trusted(file, id, value)?);
+                }
+            }
+            "credentials" => {
+                for (name, value) in table {
+                    let path = credential(file, home, name, value)?;
+                    bindings.credentials.paths.insert(name.clone(), path);
                 }
             }
             "build" | "projections" | "targets" | "environments" => {
@@ -403,7 +446,7 @@ pub fn read(file: &Path, home: Option<&Path>) -> Answer<Bindings> {
                     Some(&at),
                     format!(
                         "{at} is no table of the bindings file, which binds [store], \
-                         [landing], [ledger], [signing], [gate] and [trust]"
+                         [landing], [ledger], [signing], [gate], [trust] and [credentials]"
                     ),
                 ))
             }
@@ -486,6 +529,42 @@ fn trusted(file: &Path, id: &str, value: &toml::Value) -> Answer<NamedSigner> {
         kinds: Vec::new(),
         checks: Vec::new(),
     })
+}
+
+/// `[credentials] <name>`: the path of the file holding the credential
+/// `name`, absolute or beginning `~/` and expanded against `home` as the
+/// file's other paths are; unreadable naming the file and the key where
+/// it is no string or a path of neither form, its value in no words,
+/// since a value of another form may be the credential itself (64, rule
+/// core.21). The file at the path is never opened.
+fn credential(
+    file: &Path,
+    home: Option<&Path>,
+    name: &str,
+    value: &toml::Value,
+) -> Answer<PathBuf> {
+    let at = format!("[credentials] {name}");
+    let text = value.as_str().ok_or_else(|| {
+        unreadable(
+            file,
+            Some(&at),
+            format!(
+                "{at} is not a path in a string; [credentials] names the path of the file \
+                 holding each credential, never the credential"
+            ),
+        )
+    })?;
+    if !(Path::new(text).is_absolute() || text.starts_with("~/")) {
+        return Err(unreadable(
+            file,
+            Some(&at),
+            format!(
+                "{at} is no path absolute or beginning ~/; [credentials] names the path of \
+                 the file holding each credential, never the credential"
+            ),
+        ));
+    }
+    path_of(file, home, &at, text)
 }
 
 /// The command a binding is made for: publish, push or a push before a
